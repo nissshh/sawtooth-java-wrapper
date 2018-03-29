@@ -1,0 +1,45 @@
+/**
+ * 
+ */
+package com.mycompany.blockchain.sawtooth.core.service;
+
+import sawtooth.sdk.processor.Utils;
+
+/**
+ * 
+ * Defines the address build mechanism and return as address based on 
+ * entered data.
+ * @author Nishant Sonar<nishant_sonar@yahoo.com>
+ *
+ */
+public interface IAddressBuilder<ENTITY> {
+	
+	/**
+	 * builds an address based on the entity data.
+	 * 
+	 * @param entity
+	 * @return address for the entity
+	 */
+	default String buildAddress(ENTITY entity) {
+		return Utils.hash512(getTransactionFamilyName().getBytes()).substring(0, 6)
+				+ Utils.hash512(getEntityKey(entity).getBytes()).substring(0, 64);
+	}
+
+	
+	/**
+	 * Provide the transaction family name as for prefix 
+	 * 
+	 * @return
+	 */
+	String getTransactionFamilyName();
+
+	/**
+	 * Provides the way entity key is calculated, can be of certaintype
+	 * 
+	 * E.g for Item it could be ItemName+Color+Shape as key
+	 * @param entity
+	 * @return
+	 */
+	String getEntityKey(ENTITY entity);
+
+}
