@@ -45,7 +45,7 @@ public class StringTranscationHandler implements ITransactionHandler<String, Str
 	public StringTranscationHandler() {
 		txnFamilyName = TXN_FAMILY_NAME;
 		txnFamilyVer = TXN_FAMILY_VER;
-		addressBuilder = new StringAddressBuilder(txnFamilyName);
+		addressBuilder = new StringAddressBuilder(txnFamilyName,txnFamilyVer);
 		baseDAO = new StringBaseDAO();
 		validator = new StringValidator();
 		entityConvertor = new StringToStringEntityConvertor();
@@ -55,7 +55,7 @@ public class StringTranscationHandler implements ITransactionHandler<String, Str
 		super();
 		this.txnFamilyName = txnFamillyName;
 		this.txnFamilyVer = txnFamilyVersion;
-		addressBuilder = new StringAddressBuilder(txnFamilyName);
+		addressBuilder = new StringAddressBuilder(txnFamilyName,txnFamilyVer);
 		baseDAO = new StringBaseDAO();
 		validator = new StringValidator();
 		entityConvertor = new StringToStringEntityConvertor();

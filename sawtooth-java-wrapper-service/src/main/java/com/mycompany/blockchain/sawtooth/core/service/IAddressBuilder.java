@@ -32,6 +32,13 @@ public interface IAddressBuilder<ENTITY> {
 	 * @return
 	 */
 	String getTransactionFamilyName();
+	
+	/**
+	 * Proide the transaction family version
+	 * @return
+	 */
+	
+	String getTransactionFamilyVersion();
 
 	/**
 	 * Provides the way entity key is calculated, can be of certaintype
