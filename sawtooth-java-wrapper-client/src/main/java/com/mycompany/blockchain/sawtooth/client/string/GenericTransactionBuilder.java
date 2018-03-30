@@ -1,5 +1,7 @@
 package com.mycompany.blockchain.sawtooth.client.string;
 
+import java.util.Map;
+
 import com.google.protobuf.ByteString;
 import com.mycompany.blockchain.sawtooth.core.service.IAddressBuilder;
 
@@ -24,7 +26,7 @@ class GenericTransactionBuilder<ENTITY>{
 	 * @param payload
 	 * @return
 	 */
-	Transaction buildTransaction(ENTITY payload) {
+	TransactionHeaderDTO buildTransaction(ENTITY payload) {
 		String payloadBytes = Utils.hash512(payload.toString().getBytes());
 		ByteString payloadByteString = ByteString.copyFrom(payload.toString().getBytes()); //TODO for protos to take from Bytes or serialized bytes.
 		String publicKeyHex = signer.getSignerPrivateKey().getPublicKeyAsHex();
@@ -49,8 +51,9 @@ class GenericTransactionBuilder<ENTITY>{
 				.setPayload(payloadByteString)
 				.setHeaderSignature(headerSignature)
 				.build();
+		TransactionHeaderDTO txnHeaderDTO = new TransactionHeaderDTO(txn, headerSignature);
 		//@formatter:on
-		return txn;
+		return txnHeaderDTO;
 	}
 
 	public Signer getSigner() {

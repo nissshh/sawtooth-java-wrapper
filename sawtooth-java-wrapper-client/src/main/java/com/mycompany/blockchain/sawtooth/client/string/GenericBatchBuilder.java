@@ -16,13 +16,14 @@ class GenericBatchBuilder{
 	 */
 	Signer signer;
 	
-	public BatchList buildBatch(List<Transaction> transactions){
+	public BatchList buildBatch(TransactionHeaderDTO transactionHeaderDTO){
 		String publicKeyHex = signer.getSignerPrivateKey().getPublicKeyAsHex();
+		
 		
 		BatchHeader batchHeader = BatchHeader.newBuilder()
 				.clearSignerPublicKey()
 				.setSignerPublicKey(publicKeyHex)
-				//.addTransactionIds(txn.getHeaderSignature())
+				.addTransactionIds(transactionHeaderDTO.getHeaderSignature())
 				.build();
 
 		ByteString batchHeaderBytes = batchHeader.toByteString();
@@ -31,7 +32,7 @@ class GenericBatchBuilder{
 				.setHeader(batchHeaderBytes)
 				.setHeaderSignature(batchHeaderSignature)
 				.setTrace(true)
-				.addAllTransactions(transactions)
+				.addTransactions(transactionHeaderDTO.getTransaction())
 				.build();
 
 		BatchList batchList = BatchList.newBuilder()

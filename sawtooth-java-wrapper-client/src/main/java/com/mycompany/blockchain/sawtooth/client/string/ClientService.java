@@ -51,9 +51,8 @@ abstract class ClientService<ENTITY> {
 
 	public String service(ENTITY payload) throws UnirestException {
 		List<Transaction> transactions = new ArrayList<>();
-		Transaction transaction = transactionBuilder.buildTransaction(payload);
-		transactions.add(transaction);
-		BatchList batch = batchBuilder.buildBatch(transactions);
+		TransactionHeaderDTO transaction = transactionBuilder.buildTransaction(payload);
+		BatchList batch = batchBuilder.buildBatch(transaction);
 		ByteString batchBytes = batch.toByteString();
 		String response = clientService.submit(batchBytes);
 		logger.info("Response for submission is : "+ response);
