@@ -39,4 +39,12 @@ class GenericBatchBuilder{
 				.build();
 		return batchList;
 	}
+
+	public Signer getSigner() {
+		return signer;
+	}
+
+	public void setSigner(Signer signer) {
+		this.signer = signer;
+	}
 }

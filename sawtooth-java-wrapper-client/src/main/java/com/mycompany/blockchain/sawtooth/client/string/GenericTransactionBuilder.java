@@ -8,7 +8,7 @@ import sawtooth.sdk.processor.Utils;
 import sawtooth.sdk.protobuf.Transaction;
 import sawtooth.sdk.protobuf.TransactionHeader;
 
-class GenericTransactionBuilder{
+class GenericTransactionBuilder<ENTITY>{
 	/**
 	 * The signer to signe batch and transactions
 	 */
@@ -17,22 +17,22 @@ class GenericTransactionBuilder{
 	/**
 	 * The address builder to buidl addresses for entites
 	 */
-	IAddressBuilder<String> iAddressBuilder;
+	IAddressBuilder<ENTITY> iAddressBuilder;
 	
 	/**
 	 * Builds a transaction for a signer and a payload
 	 * @param payload
 	 * @return
 	 */
-	Transaction buildTransaction(String payload) {
-		String payloadBytes = Utils.hash512(payload.getBytes());
-		ByteString payloadByteString = ByteString.copyFrom(payload.getBytes());
+	Transaction buildTransaction(ENTITY payload) {
+		String payloadBytes = Utils.hash512(payload.toString().getBytes());
+		ByteString payloadByteString = ByteString.copyFrom(payload.toString().getBytes()); //TODO for protos to take from Bytes or serialized bytes.
 		String publicKeyHex = signer.getSignerPrivateKey().getPublicKeyAsHex();
 		//@formatter:off
 		TransactionHeader txnHeader = TransactionHeader.newBuilder().clearBatcherPublicKey()
 				.setBatcherPublicKey(publicKeyHex)
 				.setFamilyName(iAddressBuilder.getTransactionFamilyName())  
-				.setFamilyVersion("1.0")
+				.setFamilyVersion(iAddressBuilder.getTransactionFamilyVersion())
 				.addInputs(iAddressBuilder.buildAddress(payload)) 
 				.setNonce("1")
 				.addOutputs(iAddressBuilder.buildAddress(payload))
@@ -51,6 +51,22 @@ class GenericTransactionBuilder{
 				.build();
 		//@formatter:on
 		return txn;
+	}
+
+	public Signer getSigner() {
+		return signer;
+	}
+
+	public void setSigner(Signer signer) {
+		this.signer = signer;
+	}
+
+	public IAddressBuilder<ENTITY> getiAddressBuilder() {
+		return iAddressBuilder;
+	}
+
+	public void setiAddressBuilder(IAddressBuilder<ENTITY> iAddressBuilder) {
+		this.iAddressBuilder = iAddressBuilder;
 	}
 	
 }

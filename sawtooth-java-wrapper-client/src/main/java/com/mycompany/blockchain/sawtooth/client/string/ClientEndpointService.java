@@ -6,7 +6,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 
 public class ClientEndpointService {
 
-	private String endpoint = "http://localhost:8008/batches";
+	private String endpoint = "http://10.34.14.1:8008/batches";
 	
 	private String contentType = "application/octet-stream";
 	
