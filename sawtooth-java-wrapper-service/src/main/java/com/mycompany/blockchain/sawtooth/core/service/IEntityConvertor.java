@@ -3,14 +3,7 @@
  */
 package com.mycompany.blockchain.sawtooth.core.service;
 
-/**
- * 
- * 
- * @author dev
- *
- */
-
-
+import java.io.IOException;
 
 /**
  A converter that represents the logic to convert from an entity (usually
@@ -23,7 +16,7 @@ package com.mycompany.blockchain.sawtooth.core.service;
  */
 public interface IEntityConvertor<CORE, ENTITY, PARSER> {
 
-	ENTITY convert(CORE data);
+	ENTITY convert(CORE data) throws IOException;
 
 	PARSER getParser();
 }
