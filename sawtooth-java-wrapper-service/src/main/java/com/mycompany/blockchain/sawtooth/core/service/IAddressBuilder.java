@@ -3,6 +3,8 @@
  */
 package com.mycompany.blockchain.sawtooth.core.service;
 
+import java.io.UnsupportedEncodingException;
+
 import sawtooth.sdk.processor.Utils;
 
 /**
@@ -19,8 +21,9 @@ public interface IAddressBuilder<ENTITY> {
 	 * 
 	 * @param entity
 	 * @return address for the entity
+	 * @throws UnsupportedEncodingException 
 	 */
-	default String buildAddress(ENTITY entity) {
+	default String buildAddress(ENTITY entity) throws UnsupportedEncodingException {
 		return Utils.hash512(getTransactionFamilyName().getBytes()).substring(0, 6)
 				+ Utils.hash512(getEntityKey(entity).getBytes()).substring(0, 64);
 	}

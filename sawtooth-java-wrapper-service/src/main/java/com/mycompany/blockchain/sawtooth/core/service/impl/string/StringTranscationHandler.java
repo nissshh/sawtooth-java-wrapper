@@ -3,6 +3,7 @@
  */
 package com.mycompany.blockchain.sawtooth.core.service.impl.string;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.logging.Logger;
 import com.mycompany.blockchain.sawtooth.core.service.IAddressBuilder;
@@ -90,14 +91,20 @@ public class StringTranscationHandler implements ITransactionHandler<String, Str
 		String payload = TPProcessRequestHelper.getPayload(transactionRequest);
 		// No convertor required as its a simple string  but we can use idempotent one
 		// can be used in case the payload we got is of different representation or further decoding is required.
-		String entity = entityConvertor.convert(payload);  
-		String address = addressBuilder.buildAddress(entity);
-		String currentData = this.getBaseDAO().getLedgerEntry(state, address);
-		logger.info(String.format("Current Data for address %s is %s",address,currentData));
-		//we are not updating the value here.
-		validator.validate(entity);
-		Collection<String> addressUpdated = this.getBaseDAO().putLedgerEntry(state, address, entity);
-
+		String entity = null;
+		try {
+			entity = entityConvertor.convert(payload);
+			String address = addressBuilder.buildAddress(entity);
+			String currentData;
+			currentData = this.getBaseDAO().getLedgerEntry(state, address);
+			
+			logger.info(String.format("Current Data for address %s is %s",address,currentData));
+			//we are not updating the value here.
+			validator.validate(entity);
+			Collection<String> addressUpdated = this.getBaseDAO().putLedgerEntry(state, address, entity);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 	}
 
 	@Override

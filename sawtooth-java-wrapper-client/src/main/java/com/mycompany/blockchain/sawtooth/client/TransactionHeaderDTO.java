@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.mycompany.blockchain.sawtooth.client.string;
+package com.mycompany.blockchain.sawtooth.client;
 
 import sawtooth.sdk.protobuf.Transaction;
 
