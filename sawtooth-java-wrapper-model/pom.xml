@@ -1,13 +1,61 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.mycompany.blockchain.sawtooth.jwrap.model</groupId>
-  <artifactId>sawtooth-java-wrapper-model</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>Sawtooth Framework Modals</name>
-  <description>Base and common modal classes for framerowk specifically for sawtooth</description>
-  <parent>
-  	<groupId>com.mycompany.blockchain.sawtooth.jwrap</groupId>
-  	<artifactId>sawtooth-java-wrapper-parent</artifactId>
-  	<version>0.0.1-SNAPSHOT</version>
-  </parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.mycompany.blockchain.sawtooth.jwrap.model</groupId>
+	<artifactId>sawtooth-java-wrapper-model</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>Sawtooth Framework Modals</name>
+	<description>Base and common modal classes for framerowk specifically for sawtooth</description>
+	<parent>
+		<groupId>com.mycompany.blockchain.sawtooth.jwrap</groupId>
+		<artifactId>sawtooth-java-wrapper-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<dependencies>
+		<dependency>
+			<groupId>com.google.protobuf</groupId>
+			<artifactId>protobuf-java</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.xolstice.maven.plugins</groupId>
+				<artifactId>protobuf-maven-plugin</artifactId>
+				<configuration>
+					<protocArtifact>com.google.protobuf:protoc:3.2.0:exe:${os.detected.classifier}</protocArtifact>
+					<protoSourceRoot>${project.basedir}/src/main/resources/protos</protoSourceRoot>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
