@@ -10,31 +10,31 @@ message IntKeyVal {
 }
 
 message IntKeyValuePayload {
-	message IncrementData {
+
+
+	enum PayloadType {
+		PAYLOAD_TYPE_UNSET = 0;
+		INCREMENT_VALUE = 1;
+		DECREMENT_VALUE = 2;
+		SET_VALUE= 3;
+	}
+
+	PayloadType payload_type = 1;
+	IncrementData increment_data = 2;
+	DecrementData decrement_data = 3;
+}
+
+
+message IncrementData {
 		// as key
 		string customer_name = 1;
 		//as value for increment
 		uint32 incr_value = 2;
 	}
 
-	message DecrementData {
+message DecrementData {
 		//as key
 		string customer_name = 1;
 		//as value for decrement
 		uint32 incr_value = 2;
-	}
-
-	enum PayloadType {
-		PAYLOAD_TYPE_UNSET = 0;
-		CREATE_ACCOUNT = 1;
-		DEPOSIT_CHECKING = 2;
-		WRITE_CHECK = 3;
-		TRANSACT_SAVINGS = 4;
-		SEND_PAYMENT = 5;
-		AMALGAMATE = 6;
-	}
-
-	PayloadType payload_type = 1;
-	IncrementData increment_data = 2;
-	DecrementData decrement_data = 3;
 }

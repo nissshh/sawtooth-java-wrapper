@@ -3,6 +3,8 @@
  */
 package com.mycompany.blockchain.sawtooth.core.service;
 
+import java.io.IOException;
+
 /**
  * A parser that will comvert from data to .
  * @author dev
@@ -12,5 +14,5 @@ package com.mycompany.blockchain.sawtooth.core.service;
  */
 public interface IParser <FROM,TO>{
 
-	TO parse(FROM data);
+	TO parse(FROM data) throws IOException;
 }
