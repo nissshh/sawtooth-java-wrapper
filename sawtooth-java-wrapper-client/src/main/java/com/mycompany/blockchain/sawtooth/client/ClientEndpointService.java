@@ -1,8 +1,10 @@
-package com.mycompany.blockchain.sawtooth.client.string;
+package com.mycompany.blockchain.sawtooth.client;
+
 
 import com.google.protobuf.ByteString;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+
 
 public class ClientEndpointService {
 

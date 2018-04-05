@@ -1,4 +1,4 @@
-package com.mycompany.blockchain.sawtooth.client.string;
+package com.mycompany.blockchain.sawtooth.client;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import com.mycompany.blockchain.sawtooth.core.service.IAddressBuilder;
 import sawtooth.sdk.protobuf.BatchList;
 import sawtooth.sdk.protobuf.Transaction;
 
-abstract class ClientService<ENTITY> {
+public abstract class ClientService<ENTITY> {
 
 	private static Logger logger = Logger.getLogger(ClientService.class.getName());
 	
@@ -25,7 +25,7 @@ abstract class ClientService<ENTITY> {
 	
 	private GenericBatchBuilder batchBuilder;
 	
-	private GenericTransactionBuilder<ENTITY> transactionBuilder;
+	protected GenericTransactionBuilder<ENTITY> transactionBuilder;
 	
 	private Signer signer;
 	
@@ -39,18 +39,16 @@ abstract class ClientService<ENTITY> {
 
 	
 	public void init() {
-		transactionBuilder = new GenericTransactionBuilder<>();
 		signer = new Signer(signerKey);
 		transactionBuilder.setSigner(signer);
 		transactionBuilder.setiAddressBuilder(iAddressBuilder);
 		batchBuilder= new GenericBatchBuilder();
 		batchBuilder.setSigner(signer);
 		clientService = new ClientEndpointService();
-		
 	}
 
-	public String service(ENTITY payload) throws UnirestException {
-		List<Transaction> transactions = new ArrayList<>();
+
+	public String service(ENTITY payload) throws Exception {
 		TransactionHeaderDTO transaction = transactionBuilder.buildTransaction(payload);
 		BatchList batch = batchBuilder.buildBatch(transaction);
 		ByteString batchBytes = batch.toByteString();
@@ -127,11 +125,5 @@ abstract class ClientService<ENTITY> {
 
 	public abstract IAddressBuilder<ENTITY> getiAddressBuilder();
 
-
-	public abstract  void setiAddressBuilder(IAddressBuilder<ENTITY> iAddressBuilder);
-
-
-	public void setTransactionBuilder(GenericTransactionBuilder<ENTITY> transactionBuilder) {
-		this.transactionBuilder = transactionBuilder;
-	}
+	public abstract GenericTransactionBuilder<ENTITY>  getTransactionBuilder();
 }

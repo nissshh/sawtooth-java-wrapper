@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.mycompany.blockchain.sawtooth.mortgage.asset.protobuf";
+
+
+message Asset {
+	//a user defined natural key for the asset
+	string id= 1;
+	//a user defined natural key for the asset
+	string name= 2;
+	//asset type  -- todo add as enum
+	string type= 3;
+	// asset value
+	uint32 value = 4;
+	// this field will hold pub-key for the holder of the asset
+	string public_key = 5;
+	// a free formed field to hold asset details.  todo - can be connected to the various asset like real,securities, abs etc.
+	string details = 6;
+}
+
+message AssetContainer {
+    repeated Asset entries = 1;
+}
+
+message AssetPayload{
+
+// Actions on Asset.
+ enum PayloadType {
+        TYPE_UNSET = 0;
+        CREATE_ASSET = 1;
+        UPDATE_ASSET = 2;
+        DELETE_ASSET = 3;
+    }
+
+    PayloadType payload_type = 1;
+    CreateAsset create_asset = 2;
+    UpdateAsset udpate_asset = 3;
+    DeleteAsset delete_asset = 4;
+
+}
+
+message CreateAsset {
+    string name = 1;
+    string type= 2;
+    int32 value = 3;
+    string pub_key = 4;
+    string details= 5;
+}
+
+message UpdateAsset {
+	string name = 1;
+    string type= 2;
+    int32 value = 3;
+    string pub_key = 4;
+    string details= 5;
+}
+
+message DeleteAsset{
+	string id = 1;
+}

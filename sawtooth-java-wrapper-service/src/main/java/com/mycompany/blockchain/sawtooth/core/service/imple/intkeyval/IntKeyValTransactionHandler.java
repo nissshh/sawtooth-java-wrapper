@@ -3,6 +3,8 @@
  */
 package com.mycompany.blockchain.sawtooth.core.service.imple.intkeyval;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.Collections;
@@ -16,8 +18,6 @@ import com.mycompany.blockchain.sawtooth.core.service.IBaseDAO;
 import com.mycompany.blockchain.sawtooth.core.service.IEntityConvertor;
 import com.mycompany.blockchain.sawtooth.core.service.ITransactionHandler;
 import com.mycompany.blockchain.sawtooth.core.service.IValidator;
-import com.mycompany.blockchain.sawtooth.core.service.impl.string.StringToStringParser;
-import com.mycompany.blockchain.sawtooth.core.service.impl.string.StringTranscationHandler;
 import com.mycompany.blockchain.sawtooth.core.service.util.TPProcessRequestHelper;
 import com.mycompany.blockchain.sawtooth.intkey.protobuf.IntKeyVal;
 
@@ -65,19 +65,33 @@ public class IntKeyValTransactionHandler implements ITransactionHandler<String, 
 			throws InvalidTransactionException, InternalError {
 		ByteString payload = TPProcessRequestHelper.getPayloadAsByteString(transactionRequest);
 		
-		IntKeyVal entity = entityConvertor.convert(payload);  
+		IntKeyVal entity = null;
+		try {
+			entity = entityConvertor.convert(payload);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  
 
 		//we are not updating the value here.
-		validator.validate(entity);
+		//validator.validate(entity);
 		
-		String address = getAddressBuilder().buildAddress(entity); //the request contains data and action.
+		String address;
+		try {
+			address = getAddressBuilder().buildAddress(entity);
+		} catch (UnsupportedEncodingException e1) {
+			throw new InternalError(e1.getMessage());
+		} //the request contains data and action.
 		
-		IntKeyVal currentData = getBaseDAO().getLedgerEntry(state, address);
-		
-		logger.info(String.format("Current Data for address %s is %s",address,currentData));
-		
-		
-		Collection<String> addressUpdated = this.getBaseDAO().putLedgerEntry(state, address, entity);
+		IntKeyVal currentData;
+		try {
+			currentData = getBaseDAO().getLedgerEntry(state, address);
+			logger.info(String.format("Current Data for address %s is %s",address,currentData));
+			Collection<String> addressUpdated = this.getBaseDAO().putLedgerEntry(state, address, entity);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 

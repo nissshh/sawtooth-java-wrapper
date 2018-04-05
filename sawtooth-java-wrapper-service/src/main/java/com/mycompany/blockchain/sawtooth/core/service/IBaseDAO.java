@@ -3,6 +3,7 @@
  */
 package com.mycompany.blockchain.sawtooth.core.service;
 
+import java.io.IOException;
 import java.util.Collection;
 
 import sawtooth.sdk.processor.State;
@@ -28,7 +29,7 @@ public interface IBaseDAO<KEY,ENTITY> {
 	 * @throws InvalidTransactionException 
 	 * @throws InternalError 
 	 */
-	ENTITY getLedgerEntry(State stateInfo,KEY address) throws InternalError, InvalidTransactionException;
+	ENTITY getLedgerEntry(State stateInfo,KEY address) throws InternalError, InvalidTransactionException,IOException;
 	
 	
 	/***
@@ -39,6 +40,6 @@ public interface IBaseDAO<KEY,ENTITY> {
 	 * @throws InvalidTransactionException 
 	 * @throws InternalError 
 	 */
-	Collection<String> putLedgerEntry(State stateInfo,KEY address,ENTITY data) throws InternalError, InvalidTransactionException;
+	Collection<String> putLedgerEntry(State stateInfo,KEY address,ENTITY data) throws InternalError, InvalidTransactionException,IOException;
 
 }
