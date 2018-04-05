@@ -40,7 +40,7 @@ public class IntKeyAddressBuilder implements IAddressBuilder<String> {
 	@Override
 	public String getEntityKey(String entity) {
 		String[] splits = entity.split(" ");
-		String key;
+		String key;	
 		if (splits[0].equalsIgnoreCase("inc") || splits[0].equalsIgnoreCase("dec")
 				|| splits[0].equalsIgnoreCase("set")) {
 			key = splits[1];
@@ -53,7 +53,7 @@ public class IntKeyAddressBuilder implements IAddressBuilder<String> {
 	
 	@Override
 	public String buildAddress(String entity) throws UnsupportedEncodingException {
-		String hashedName =	Utils.hash512(entity.getBytes("UTF-8"));
+		String hashedName =	Utils.hash512(getEntityKey(entity).getBytes("UTF-8"));
 		return Utils.hash512(this.txFamilyName.getBytes("UTF-8")).substring(0, 6)
 				+ hashedName.substring(hashedName.length() - 64);
 	}
