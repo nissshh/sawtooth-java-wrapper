@@ -37,11 +37,9 @@ public abstract class GenericTransactionBuilder<ENTITY>{
 				.setBatcherPublicKey(publicKeyHex)
 				.setFamilyName(iAddressBuilder.getTransactionFamilyName())  
 				.setFamilyVersion(iAddressBuilder.getTransactionFamilyVersion())
-				//.addInputs(iAddressBuilder.buildAddress(payload))
-				.addInputs("1cf1264aa624fa573079918f86c958f503cecb210ec2b258092079105096dbbdd61976")
+				.addInputs(iAddressBuilder.buildAddress(payload))
 				.setNonce("1")
-				//.addOutputs(iAddressBuilder.buildAddress(payload))
-				.addOutputs("1cf1264aa624fa573079918f86c958f503cecb210ec2b258092079105096dbbdd61976")
+				.addOutputs(iAddressBuilder.buildAddress(payload))
 				.setPayloadSha512(payloadBytes)
 				.setSignerPublicKey(publicKeyHex)
 				.build();

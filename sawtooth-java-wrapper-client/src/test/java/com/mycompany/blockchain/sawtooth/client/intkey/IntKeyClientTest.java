@@ -31,7 +31,7 @@ public class IntKeyClientTest {
 
 	@Test
 	public void test() throws Exception {
-		String payload = new String("inc nishant 100");
+		String payload = new String("set sonar 10");
 		System.out.println("Sending Payload as "+payload);
 		String resposne = service.service(payload);
 		logger.info("Response from client Service : "+resposne);
