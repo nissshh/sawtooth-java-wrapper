@@ -7,7 +7,7 @@ import java.io.IOException;
 
 /**
  * A parser that will comvert from data to .
- * @author dev
+ * @author Nishant Sonar<nishant_sonar@yahoo.com>
  *
  * @param <FROM>
  * @param <TO>

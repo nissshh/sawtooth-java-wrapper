@@ -8,7 +8,7 @@ import com.mycompany.blockchain.sawtooth.core.service.IEntityConvertor;
 /**
  * an entity convertor from string to sting.
  * 
- * @author dev
+ * @author Nishant Sonar<nishant_sonar@yahoo.com>
  *
  */
 public class StringToStringEntityConvertor implements IEntityConvertor<String, String, StringToStringParser> {

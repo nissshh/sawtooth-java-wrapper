@@ -7,7 +7,7 @@ import com.mycompany.blockchain.sawtooth.core.service.IAddressBuilder;
 import com.mycompany.blockchain.sawtooth.mortgage.asset.protobuf.Asset;
 
 /**
- * @author dev
+ * @author Nishant Sonar<nishant_sonar@yahoo.com>
  *
  */
 public class AssetAddressBuilder implements IAddressBuilder<Asset> {

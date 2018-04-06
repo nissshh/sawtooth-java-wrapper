@@ -10,7 +10,7 @@ import com.mycompany.blockchain.sawtooth.core.service.IParser;
 import com.mycompany.blockchain.sawtooth.mortgage.asset.protobuf.AssetPayload;
 
 /**
- * @author dev
+ * @author Nishant Sonar<nishant_sonar@yahoo.com>
  *
  */
 public class AssetPayloadParser implements IParser<ByteString, AssetPayload>{

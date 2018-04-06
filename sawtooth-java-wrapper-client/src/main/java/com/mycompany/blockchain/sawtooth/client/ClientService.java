@@ -1,17 +1,23 @@
 package com.mycompany.blockchain.sawtooth.client;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 import com.google.protobuf.ByteString;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mycompany.blockchain.sawtooth.core.service.IAddressBuilder;
 
 import sawtooth.sdk.protobuf.BatchList;
-import sawtooth.sdk.protobuf.Transaction;
+import sawtooth.sdk.protobuf.ClientBatchSubmitResponse.Status;
 
-public abstract class ClientService<ENTITY> {
+/**
+ * 
+ * @author Nishant Sonar<nishant_sonar@yahoo.com>
+ *
+ * @param <ENTITY>  Entity that will be stored on block chaing. The concreate implementation define what entity they will work on and further defines the 
+ * adderssing and entities that are used.
+ * @param <PAYLOAD> Payload that will be sent to Transaction Family.Further forms the encoded payuloa. A payload generally contains Entity and Action to be permformed
+ * on the entitye. 
+ */
+public abstract class ClientService<ENTITY,PAYLOAD> {
 
 	private static Logger logger = Logger.getLogger(ClientService.class.getName());
 	
@@ -21,40 +27,48 @@ public abstract class ClientService<ENTITY> {
 	
 	private String signerKey;
 
-	private ClientEndpointService clientService;
+	protected ClientZMQTemplate template;
 	
-	private GenericBatchBuilder batchBuilder;
+	protected GenericBatchBuilder batchBuilder;
 	
-	protected GenericTransactionBuilder<ENTITY> transactionBuilder;
+	protected GenericTransactionBuilder<ENTITY,PAYLOAD> transactionBuilder;
 	
-	private Signer signer;
+	protected Signer signer;
 	
 	protected IAddressBuilder<ENTITY> iAddressBuilder;
 
-	public ClientService(String txFamily, String txVersion, String signerKey) {
+	private String address;
+
+	public ClientService(String txFamily, String txVersion, String signerKey,String address) {
 		this.txFamily = txFamily;
 		this.txVersion = txVersion;
 		this.signerKey = signerKey;
+		this.address = address;
 	}
 
 	
-	public void init() {
+	public void init() throws Exception {
 		signer = new Signer(signerKey);
 		transactionBuilder.setSigner(signer);
 		transactionBuilder.setiAddressBuilder(iAddressBuilder);
 		batchBuilder= new GenericBatchBuilder();
 		batchBuilder.setSigner(signer);
-		clientService = new ClientEndpointService();
+		template = new ClientZMQTemplate(address);
+		template.init();
 	}
 
 
-	public String service(ENTITY payload) throws Exception {
+	public String submitStateChange(PAYLOAD payload) throws Exception {
 		TransactionHeaderDTO transaction = transactionBuilder.buildTransaction(payload);
 		BatchList batch = batchBuilder.buildBatch(transaction);
 		ByteString batchBytes = batch.toByteString();
-		String response = clientService.submit(batchBytes);
-		logger.info("Response for submission is : "+ response);
-		return response;
+		Status response = template.submitBatch(batchBytes);
+		logger.info("Response for submission is : "+ response.getNumber());
+		return response.name();
+		
+	}
+	
+	public void requestState(PAYLOAD payload) {
 		
 	}
 
@@ -93,16 +107,6 @@ public abstract class ClientService<ENTITY> {
 	}
 
 
-	public ClientEndpointService getClientService() {
-		return clientService;
-	}
-
-
-	public void setClientService(ClientEndpointService clientService) {
-		this.clientService = clientService;
-	}
-
-
 	public GenericBatchBuilder getBatchBuilder() {
 		return batchBuilder;
 	}
@@ -125,5 +129,5 @@ public abstract class ClientService<ENTITY> {
 
 	public abstract IAddressBuilder<ENTITY> getiAddressBuilder();
 
-	public abstract GenericTransactionBuilder<ENTITY>  getTransactionBuilder();
+	public abstract GenericTransactionBuilder<ENTITY,PAYLOAD>  getTransactionBuilder();
 }

@@ -17,7 +17,7 @@ import sawtooth.sdk.processor.exceptions.InvalidTransactionException;
 
 /**
  * Implementation for storing and retrieving value.
- * @author dev
+ * @author Nishant Sonar<nishant_sonar@yahoo.com>
  *
  */
 public class StringBaseDAO implements IBaseDAO<String, String> {

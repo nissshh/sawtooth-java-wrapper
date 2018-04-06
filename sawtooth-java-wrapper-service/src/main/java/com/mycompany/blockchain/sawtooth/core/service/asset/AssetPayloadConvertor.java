@@ -10,7 +10,7 @@ import com.mycompany.blockchain.sawtooth.core.service.IEntityConvertor;
 import com.mycompany.blockchain.sawtooth.mortgage.asset.protobuf.AssetPayload;
 
 /**
- * @author dev
+ * @author Nishant Sonar<nishant_sonar@yahoo.com>
  *
  */
 public class AssetPayloadConvertor implements IEntityConvertor<ByteString, AssetPayload, AssetPayloadParser> {
