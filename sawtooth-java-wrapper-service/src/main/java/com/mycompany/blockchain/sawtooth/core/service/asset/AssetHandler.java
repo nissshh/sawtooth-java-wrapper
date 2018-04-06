@@ -5,12 +5,12 @@ package com.mycompany.blockchain.sawtooth.core.service.asset;
 
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import com.google.protobuf.ByteString;
 import com.mycompany.blockchain.sawtooth.core.service.IAddressBuilder;
 import com.mycompany.blockchain.sawtooth.core.service.IBaseDAO;
 import com.mycompany.blockchain.sawtooth.core.service.IEntityConvertor;
-import com.mycompany.blockchain.sawtooth.core.service.IParser;
 import com.mycompany.blockchain.sawtooth.core.service.ITransactionHandler;
 import com.mycompany.blockchain.sawtooth.core.service.IValidator;
 //import com.mycompany.blockchain.sawtooth.intkey.protobuf.IntKeyValuePayload.PayloadType;
@@ -21,6 +21,7 @@ import com.mycompany.blockchain.sawtooth.mortgage.asset.protobuf.CreateAsset;
 import com.mycompany.blockchain.sawtooth.mortgage.asset.protobuf.DeleteAsset;
 import com.mycompany.blockchain.sawtooth.mortgage.asset.protobuf.UpdateAsset;
 
+import lombok.extern.slf4j.Slf4j;
 import sawtooth.sdk.processor.State;
 import sawtooth.sdk.processor.exceptions.InternalError;
 import sawtooth.sdk.processor.exceptions.InvalidTransactionException;
@@ -28,14 +29,16 @@ import sawtooth.sdk.protobuf.TpProcessRequest;
 
 /**
  * 
- * @author dev
+ * @author Nishant Sonar<nishant_sonar@yahoo.com>
  *
  */
 public class AssetHandler implements ITransactionHandler<String, AssetPayload> {
 	
-	public static final String TX_FAMILY_NAME="";
+	Logger log = Logger.getLogger(AssetHandler.class.getName());
 	
-	public static final String TX_FAMILY_VER="";
+	public static final String TX_FAMILY_NAME="asset";
+	
+	public static final String TX_FAMILY_VER="1.0";
 	
 	//framwork usable classes
 	private IAddressBuilder<Asset> assetAddressBuilder;
@@ -70,6 +73,7 @@ public class AssetHandler implements ITransactionHandler<String, AssetPayload> {
 	@Override
 	public void apply(TpProcessRequest transactionRequest, State state)
 			throws InvalidTransactionException, InternalError {
+		log.info("Inside Apply got TP Request " + transactionRequest);
 		try {
 			AssetPayload assetPayload = entityConvertor.convert(transactionRequest.getPayload());
 			if(assetPayload.getPayloadType().equals(PayloadType.CREATE_ASSET)) {
@@ -85,7 +89,7 @@ public class AssetHandler implements ITransactionHandler<String, AssetPayload> {
 		} catch (IOException e) {
 			throw new InternalError(e.getMessage());
 		}
-		
+		log.info("Finished Apply got TP Request");
 	}
 
 	
@@ -100,15 +104,17 @@ public class AssetHandler implements ITransactionHandler<String, AssetPayload> {
 	 * @throws InternalError 
 	 */
 	private void handle(TpProcessRequest transactionRequest, State state, UpdateAsset udpateAsset) throws InvalidTransactionException, InternalError, IOException {
+		log.info("Inside com.mycompany.blockchain.sawtooth.core.service.asset.AssetHandler.handle(TpProcessRequest, State, UpdateAsset)");
 		Asset asset = getAsset(transactionRequest, udpateAsset); //build data.
 		String address = assetAddressBuilder.buildAddress(asset); //build address.
 		Asset existingAsset = assetDao.getLedgerEntry(state, address);
+		log.info("Handling "+udpateAsset.getDescriptorForType().getName()+" for Data "+existingAsset+" at address " + address);
 		if(existingAsset==null) {
 			throw new InvalidTransactionException("No asset exists with the name as "+ asset.getName());
 		}
 		assetValidator.validate(asset); //validate data.
 		assetDao.putLedgerEntry(state, address, asset); //persist data.
-		
+		log.info("End com.mycompany.blockchain.sawtooth.core.service.asset.AssetHandler.handle(TpProcessRequest, State, UpdateAsset)");
 	}
 
 
@@ -124,14 +130,18 @@ public class AssetHandler implements ITransactionHandler<String, AssetPayload> {
 	 */
 	protected void handle(TpProcessRequest transactionRequest, State state, CreateAsset createAsset)
 			throws InvalidTransactionException, InternalError, IOException {
+		//log.debug("Inside {}",Thread.currentThread().getStackTrace()[0].getMethodName());
+		log.info("Inside com.mycompany.blockchain.sawtooth.core.service.asset.AssetHandler.handle(TpProcessRequest, State, CreateAsset)");
 		Asset asset = getAsset(transactionRequest, createAsset); //build data.
 		String address = assetAddressBuilder.buildAddress(asset); //build address.
 		Asset existingAsset = assetDao.getLedgerEntry(state, address);
-		if(existingAsset!=null) {
+		log.info("Handling "+createAsset.getDescriptorForType().getName()+" for Data "+existingAsset+" at address " + address);
+		if(existingAsset!=null && existingAsset.getName().equals(createAsset.getName())) {
 			throw new InvalidTransactionException("Cannot create asset as asset already exists with the name as "+ asset.getName());
 		}
 		assetValidator.validate(asset); //validate data.
 		assetDao.putLedgerEntry(state, address, asset); //persist data.
+		log.info("End com.mycompany.blockchain.sawtooth.core.service.asset.AssetHandler.handle(TpProcessRequest, State, CreateAsset)");
 	}
 
 	/**

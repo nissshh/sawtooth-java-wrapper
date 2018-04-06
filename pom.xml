@@ -38,14 +38,21 @@
 				<version>4.12</version>
 				<scope>test</scope>
 			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<dependencies>
 			<dependency>
 				<groupId>org.projectlombok</groupId>
 				<artifactId>lombok</artifactId>
 				<version>1.16.20</version>
 				<scope>provided</scope>
 			</dependency>
-		</dependencies>
-	</dependencyManagement>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-log4j12</artifactId>
+				<version>1.5.6</version>
+			</dependency>
+	</dependencies>
 	<build>
 		<extensions>
 			<extension>

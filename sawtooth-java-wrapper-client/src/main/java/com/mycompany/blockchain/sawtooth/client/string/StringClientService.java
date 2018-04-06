@@ -9,10 +9,10 @@ import com.mycompany.blockchain.sawtooth.client.ClientService;
 import com.mycompany.blockchain.sawtooth.client.GenericTransactionBuilder;
 
 /**
- * @author dev
+ * @author Nishant Sonar<nishant_sonar@yahoo.com>
  *
  */
-public class StringClientService extends ClientService<String> {
+public class StringClientService extends ClientService<String,String> {
 	public StringClientService(String txFamily, String txVersion, String signerKey) {
 		super(txFamily, txVersion, signerKey);
 		iAddressBuilder = new StringAddressBuilder(txFamily, txVersion);
@@ -25,8 +25,8 @@ public class StringClientService extends ClientService<String> {
 	}
 
 	@Override
-	public GenericTransactionBuilder<String> getTransactionBuilder() {
-		return null;
+	public GenericTransactionBuilder<String, String> getTransactionBuilder() {
+		return transactionBuilder;
 	}
 
 	

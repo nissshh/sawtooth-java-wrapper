@@ -11,7 +11,7 @@ import sawtooth.sdk.processor.exceptions.InvalidTransactionException;
  * 
  * A validator for string type
  * 
- * @author dev
+ * @author Nishant Sonar<nishant_sonar@yahoo.com>
  *
  */
 public class StringValidator implements IValidator<String> {

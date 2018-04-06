@@ -9,7 +9,7 @@ import com.mycompany.blockchain.sawtooth.mortgage.asset.protobuf.Asset;
 import sawtooth.sdk.processor.exceptions.InvalidTransactionException;
 
 /**
- * @author dev
+ * @author Nishant Sonar<nishant_sonar@yahoo.com>
  *
  */
 public class AssetValidator implements IValidator<Asset> {

@@ -9,7 +9,7 @@ import sawtooth.sdk.protobuf.Transaction;
  * 
  * A DTO Object to hold the transaction and associated header.
  * 
- * @author dev
+ * @author Nishant Sonar<nishant_sonar@yahoo.com>
  *
  */
 public class TransactionHeaderDTO {

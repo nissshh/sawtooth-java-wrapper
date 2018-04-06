@@ -11,7 +11,7 @@ import com.mycompany.blockchain.sawtooth.core.service.IAddressBuilder;
 import sawtooth.sdk.processor.Utils;
 
 /**
- * @author dev
+ * @author Nishant Sonar<nishant_sonar@yahoo.com>
  *
  */
 public class IntKeyAddressBuilder implements IAddressBuilder<String> {

@@ -11,7 +11,7 @@ import sawtooth.sdk.protobuf.TpProcessRequest;
  * 
  * Helper class for transaction Process Request
  * 
- * @author dev
+ * @author Nishant Sonar<nishant_sonar@yahoo.com>
  *
  */
 public class TPProcessRequestHelper {

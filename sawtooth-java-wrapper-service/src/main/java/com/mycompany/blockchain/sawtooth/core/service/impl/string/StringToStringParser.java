@@ -10,7 +10,7 @@ import com.mycompany.blockchain.sawtooth.core.service.IParser;
  * A string to string parser that converts from a string to string without
  * changing data.
  * 
- * @author dev
+ * @author Nishant Sonar<nishant_sonar@yahoo.com>
  *
  */
 public class StringToStringParser implements IParser<String, String> {

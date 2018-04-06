@@ -1,17 +1,22 @@
 package com.mycompany.blockchain.sawtooth.client;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 import com.google.protobuf.ByteString;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mycompany.blockchain.sawtooth.core.service.IAddressBuilder;
 
 import sawtooth.sdk.protobuf.BatchList;
-import sawtooth.sdk.protobuf.Transaction;
 
-public abstract class ClientService<ENTITY> {
+/**
+ * 
+ * @author Nishant Sonar<nishant_sonar@yahoo.com>
+ *
+ * @param <ENTITY>  Entity that will be stored on block chaing. The concreate implementation define what entity they will work on and further defines the 
+ * adderssing and entities that are used.
+ * @param <PAYLOAD> Payload that will be sent to Transaction Family.Further forms the encoded payuloa. A payload generally contains Entity and Action to be permformed
+ * on the entitye. 
+ */
+public abstract class ClientService<ENTITY,PAYLOAD> {
 
 	private static Logger logger = Logger.getLogger(ClientService.class.getName());
 	
@@ -21,13 +26,13 @@ public abstract class ClientService<ENTITY> {
 	
 	private String signerKey;
 
-	private ClientEndpointService clientService;
+	protected ClientEndpointService clientService;
 	
-	private GenericBatchBuilder batchBuilder;
+	protected GenericBatchBuilder batchBuilder;
 	
-	protected GenericTransactionBuilder<ENTITY> transactionBuilder;
+	protected GenericTransactionBuilder<ENTITY,PAYLOAD> transactionBuilder;
 	
-	private Signer signer;
+	protected Signer signer;
 	
 	protected IAddressBuilder<ENTITY> iAddressBuilder;
 
@@ -48,7 +53,7 @@ public abstract class ClientService<ENTITY> {
 	}
 
 
-	public String service(ENTITY payload) throws Exception {
+	public String service(PAYLOAD payload) throws Exception {
 		TransactionHeaderDTO transaction = transactionBuilder.buildTransaction(payload);
 		BatchList batch = batchBuilder.buildBatch(transaction);
 		ByteString batchBytes = batch.toByteString();
@@ -125,5 +130,5 @@ public abstract class ClientService<ENTITY> {
 
 	public abstract IAddressBuilder<ENTITY> getiAddressBuilder();
 
-	public abstract GenericTransactionBuilder<ENTITY>  getTransactionBuilder();
+	public abstract GenericTransactionBuilder<ENTITY,PAYLOAD>  getTransactionBuilder();
 }

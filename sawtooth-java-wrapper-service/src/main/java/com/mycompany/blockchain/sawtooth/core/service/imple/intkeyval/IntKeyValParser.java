@@ -11,7 +11,7 @@ import com.mycompany.blockchain.sawtooth.intkey.protobuf.IntKeyVal;
 /**
  * 
  * Parses data to IntKeyVal
- * @author dev
+ * @author Nishant Sonar<nishant_sonar@yahoo.com>
  *
  */
 public class IntKeyValParser implements IParser<ByteString, IntKeyVal> {

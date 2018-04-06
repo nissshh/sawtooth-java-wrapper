@@ -7,13 +7,12 @@ import java.io.ByteArrayOutputStream;
 
 import co.nstant.in.cbor.CborBuilder;
 import co.nstant.in.cbor.CborEncoder;
-import co.nstant.in.cbor.CborException;
 
 /**
- * @author dev
+ * @author Nishant Sonar<nishant_sonar@yahoo.com>
  *
  */
-public class IntkeyTransactionBuilder extends GenericTransactionBuilder<String>{
+public class IntkeyTransactionBuilder extends GenericTransactionBuilder<String,String>{
 
 	@Override
 	protected byte[] getEncodedPayload(String payload) throws Exception {
@@ -42,39 +41,9 @@ public class IntkeyTransactionBuilder extends GenericTransactionBuilder<String>{
 	 	byte[] encodedBytes = baos.toByteArray();
 		return encodedBytes;
 	}
+
+	@Override
+	protected String getEntity(String payload) {
+		return payload;
+	}
 }
-	
-
-	
-//	@Override
-//	TransactionHeaderDTO buildTransaction(byte[] payload) throws Exception {
-//		return super.buildTransaction(encodePayload());
-//	}
-	
-
-	   /**
-  * The encoding with payload shoudl match with the expected with transactin processor
-  * @return
-  * @throws CborException
-  */
-// private static byte[] encodePayload() throws CborException {
-// 	ByteArrayOutputStream baos = new ByteArrayOutputStream();
-// 	new CborEncoder(baos).encode(new CborBuilder()
-// 		.addMap()
-// 		.put("Verb", "set")
-// 	    .put("Name", "sandip2")
-// 	    .put("Value", 100)
-// 	    .end()
-// 	    .build());
-// 	byte[] encodedBytes = baos.toByteArray();
-//		return encodedBytes;
-//	}
-
-
-//	@Override
-//	public byte[] encodePayload(String payload) {
-//		payload.split(" ")
-//		return null;
-//	}
-	
-//}

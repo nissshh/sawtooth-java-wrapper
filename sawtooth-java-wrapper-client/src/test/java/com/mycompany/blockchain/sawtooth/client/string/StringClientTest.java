@@ -19,7 +19,7 @@ import sawtooth.sdk.client.Signing;
  * 
  * Sample application to test a client.
  * 
- * @author dev
+ * @author Nishant Sonar<nishant_sonar@yahoo.com>
  *
  */
 public class StringClientTest {
