@@ -19,8 +19,8 @@ import com.mycompany.blockchain.sawtooth.core.service.imple.intkeyval.IntKeyAddr
 public class IntKeyClientService extends ClientService<String,String> {
 
 	
-	public IntKeyClientService(String txFamily, String txVersion, String signerKey) {
-		super(txFamily, txVersion, signerKey);
+	public IntKeyClientService(String txFamily, String txVersion, String signerKey, String address) {
+		super(txFamily, txVersion, signerKey,address);
 		iAddressBuilder = new IntKeyAddressBuilder(txFamily, txVersion); //set it
 		transactionBuilder = new IntkeyTransactionBuilder();//set it
 	}

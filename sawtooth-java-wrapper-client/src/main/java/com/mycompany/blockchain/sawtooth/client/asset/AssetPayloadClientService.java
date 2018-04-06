@@ -18,8 +18,8 @@ import com.mycompany.blockchain.sawtooth.mortgage.asset.protobuf.AssetPayload;
 public class AssetPayloadClientService extends ClientService<Asset,AssetPayload> {
 
 	
-	public AssetPayloadClientService(String txFamily, String txVersion, String signerKey) {
-		super(txFamily, txVersion, signerKey);
+	public AssetPayloadClientService(String txFamily, String txVersion, String signerKey, String address) {
+		super(txFamily, txVersion, signerKey, address);
 		iAddressBuilder = new AssetAddressBuilder(txFamily, txVersion);// the address builder is share b/w client and server.
 		transactionBuilder = new AssetTransactionBuilder();
 	}

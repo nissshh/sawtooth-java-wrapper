@@ -13,8 +13,8 @@ import com.mycompany.blockchain.sawtooth.client.GenericTransactionBuilder;
  *
  */
 public class StringClientService extends ClientService<String,String> {
-	public StringClientService(String txFamily, String txVersion, String signerKey) {
-		super(txFamily, txVersion, signerKey);
+	public StringClientService(String txFamily, String txVersion, String signerKey, String address) {
+		super(txFamily, txVersion, signerKey,address);
 		iAddressBuilder = new StringAddressBuilder(txFamily, txVersion);
 		transactionBuilder = new StringTransactionBuilder();
 	}

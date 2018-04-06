@@ -6,6 +6,7 @@ import com.google.protobuf.ByteString;
 import com.mycompany.blockchain.sawtooth.core.service.IAddressBuilder;
 
 import sawtooth.sdk.protobuf.BatchList;
+import sawtooth.sdk.protobuf.ClientBatchSubmitResponse.Status;
 
 /**
  * 
@@ -26,7 +27,7 @@ public abstract class ClientService<ENTITY,PAYLOAD> {
 	
 	private String signerKey;
 
-	protected ClientEndpointService clientService;
+	protected ClientZMQTemplate template;
 	
 	protected GenericBatchBuilder batchBuilder;
 	
@@ -36,30 +37,38 @@ public abstract class ClientService<ENTITY,PAYLOAD> {
 	
 	protected IAddressBuilder<ENTITY> iAddressBuilder;
 
-	public ClientService(String txFamily, String txVersion, String signerKey) {
+	private String address;
+
+	public ClientService(String txFamily, String txVersion, String signerKey,String address) {
 		this.txFamily = txFamily;
 		this.txVersion = txVersion;
 		this.signerKey = signerKey;
+		this.address = address;
 	}
 
 	
-	public void init() {
+	public void init() throws Exception {
 		signer = new Signer(signerKey);
 		transactionBuilder.setSigner(signer);
 		transactionBuilder.setiAddressBuilder(iAddressBuilder);
 		batchBuilder= new GenericBatchBuilder();
 		batchBuilder.setSigner(signer);
-		clientService = new ClientEndpointService();
+		template = new ClientZMQTemplate(address);
+		template.init();
 	}
 
 
-	public String service(PAYLOAD payload) throws Exception {
+	public String submitStateChange(PAYLOAD payload) throws Exception {
 		TransactionHeaderDTO transaction = transactionBuilder.buildTransaction(payload);
 		BatchList batch = batchBuilder.buildBatch(transaction);
 		ByteString batchBytes = batch.toByteString();
-		String response = clientService.submit(batchBytes);
-		logger.info("Response for submission is : "+ response);
-		return response;
+		Status response = template.submitBatch(batchBytes);
+		logger.info("Response for submission is : "+ response.getNumber());
+		return response.name();
+		
+	}
+	
+	public void requestState(PAYLOAD payload) {
 		
 	}
 
@@ -95,16 +104,6 @@ public abstract class ClientService<ENTITY,PAYLOAD> {
 
 	public void setSignerKey(String signerKey) {
 		this.signerKey = signerKey;
-	}
-
-
-	public ClientEndpointService getClientService() {
-		return clientService;
-	}
-
-
-	public void setClientService(ClientEndpointService clientService) {
-		this.clientService = clientService;
 	}
 
 

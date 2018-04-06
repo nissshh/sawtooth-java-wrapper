@@ -19,13 +19,20 @@ public abstract class BaseClientTest {
 	
 	protected ECKey privateKey;
 	
+	protected ClientZMQTemplate zmqTemplate;
+
 	@Before
-	public void setup() {
+	public void setup() throws Exception {
 		privateKey = Signing.generatePrivateKey(null); // new random privatekey
 		service =  getClientService();
 		service.init();
+		
+		zmqTemplate = new ClientZMQTemplate(getZMQAddress());
+		zmqTemplate.init();
 	}
 	
+	protected abstract String getZMQAddress();
+
 	@After
 	public void teardown() {
 		service.destroy();

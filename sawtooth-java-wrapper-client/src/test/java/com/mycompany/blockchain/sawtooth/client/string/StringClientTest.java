@@ -30,7 +30,7 @@ public class StringClientTest {
 	public void setup() {
 		ECKey privateKey = Signing.generatePrivateKey(null); // new random privatekey
 		String pvtKey = privateKey.getPrivateKeyAsHex();
-		service = new StringClientService("string", "1.0", null);  //sending null now.
+		service = new StringClientService("string", "1.0", null, XXXX);  //sending null now.
 		service.init();
 
 	}
@@ -38,7 +38,7 @@ public class StringClientTest {
 	@Test
 	public void test() throws Exception {
 		String payload = "test";
-		String resposne = service.service(payload);
+		String resposne = service.submitStateChange(payload);
 		logger.info("Response from client Service : "+resposne);
 	}
 
