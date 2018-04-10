@@ -1,0 +1,96 @@
+// Copyright 2017 Intel Corporation
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// -----------------------------------------------------------------------------
+
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.mycompany.blockchain.sawtooth.wallet.protobuf";
+
+message Wallet {
+    // Customer ID
+    string customer_id = 1;
+
+    // Savings Balance (in cents to avoid float)
+    uint32 balance = 2;    
+}
+
+message SawtoothWalletPayload {
+    message CreateWallet {
+        // The CreateAccountTransaction creates an account
+
+        // Customer ID
+        string customer_id = 1;
+        
+        // Initial Checking Balance (in cents to avoid float)
+        uint32 initial_balance = 2;
+    }
+
+    message Deposit {
+        // The DepositTransction adds an amount to the customer's
+        // checking account.
+
+        // Customer ID
+        string customer_id = 1;
+
+        // Amount
+        uint32 amount = 2;
+    }  
+
+    message Withdraw {
+        // The TransactSavingsTransaction adds an amount to the customer's
+        // savings account. Amount may be a negative number.
+
+        // Customer ID
+        string customer_id = 1;
+
+        // Amount
+        int32 amount = 2;
+    }
+
+    message TransferPayment {
+        // The SendPaymentTransaction transfers an amount from one customer's
+        // checking account to another customer's checking account.
+
+        // Source Customer ID
+        string source_customer_id = 1;
+
+        // Destination Customer ID
+        string dest_customer_id = 2;
+
+        // Amount
+        uint32 amount = 3;
+    }
+
+ 	message ShowWallet {
+        // shows wallet amount.
+
+        // Customer ID whose wallet amount is to be shown
+        string customer_id = 1;
+    }
+
+    enum PayloadType {        
+        CREATE_WALLET = 0;
+        DEPOSIT = 1;
+        WITHDRAW = 2;        
+        SEND_PAYMENT = 3;        
+        SHOW_WALLET = 4;
+    }
+
+    PayloadType payload_type = 1;
+    CreateWallet create_wallet = 2;
+    Deposit deposit = 3;
+    Withdraw withdraw = 4;    
+    TransferPayment transfer_payment = 5;
+    ShowWallet show_wallet = 6;
+}
