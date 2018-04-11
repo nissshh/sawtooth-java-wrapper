@@ -112,8 +112,7 @@ public class WalletHandler implements ITransactionHandler<String, SawtoothWallet
 	private void createWallet(TpProcessRequest transactionRequest, State state,
 			CreateWallet createWallet)
 			throws InvalidTransactionException, InternalError, IOException {
-		log.info(
-				"Inside com.mycompany.blockchain.sawtooth.core.service.asset.AssetHandler.handle(TpProcessRequest, State, UpdateAsset)");
+		log.info("Inside createWallet()");
 		Wallet wallet = getWallet(transactionRequest, createWallet); // build data.
 		walletValidator.validate(wallet); // validate data.
 
@@ -126,7 +125,7 @@ public class WalletHandler implements ITransactionHandler<String, SawtoothWallet
 		}
 
 		walletDao.putLedgerEntry(state, address, wallet); // persist data.
-		log.info("Wallet created for customer " + wallet.getCustomerId() + "with initial balance "
+		log.info("Wallet created for customer " + wallet.getCustomerId() + " with initial balance "
 				+ wallet.getBalance());
 	}
 
@@ -156,7 +155,7 @@ public class WalletHandler implements ITransactionHandler<String, SawtoothWallet
 		Wallet updatedWallet = updateWalletBalance(transactionRequest, wallet.getCustomerId(),
 				existingWallet.getBalance(), deposit.getAmount(), CREDIT_ACTION);
 		walletDao.putLedgerEntry(state, address, updatedWallet); // persist data.
-		log.info("Wallet updated for customer " + wallet.getCustomerId() + "with balance "
+		log.info("Wallet updated for customer " + wallet.getCustomerId() + " with balance "
 				+ updatedWallet.getBalance());
 	}
 
@@ -186,7 +185,7 @@ public class WalletHandler implements ITransactionHandler<String, SawtoothWallet
 		Wallet updatedWallet = updateWalletBalance(transactionRequest, wallet.getCustomerId(),
 				existingWallet.getBalance(), withdraw.getAmount(), DEBIT_ACTION);
 		walletDao.putLedgerEntry(state, address, updatedWallet); // persist data.
-		log.info("Wallet updated for customer " + wallet.getCustomerId() + "with balance "
+		log.info("Wallet updated for customer " + wallet.getCustomerId() + " with balance "
 				+ updatedWallet.getBalance());
 	}
 
@@ -203,7 +202,7 @@ public class WalletHandler implements ITransactionHandler<String, SawtoothWallet
 	private void transferPayment(TpProcessRequest transactionRequest, State state,
 			TransferPayment transferPayment)
 			throws InvalidTransactionException, InternalError, IOException {
-		log.info("Inside withdrawFromWallet()");
+		log.info("Inside transferPayment()");
 
 		// Debit Source Account
 		Wallet sourceWallet = Wallet.newBuilder()
@@ -215,8 +214,9 @@ public class WalletHandler implements ITransactionHandler<String, SawtoothWallet
 		Wallet existingSourceWallet = walletDao.getLedgerEntry(state, address);
 
 		if (existingSourceWallet == null) {
-			throw new InvalidTransactionException("No wallet found for customer "
-					+ sourceWallet.getCustomerId() + ". First create a wallet and then transfer.");
+			throw new InvalidTransactionException(
+					"No wallet found for customer " + sourceWallet.getCustomerId()
+							+ ". First create a wallet for Source customer and then transfer.");
 		}
 		Wallet updatedWallet = updateWalletBalance(transactionRequest, sourceWallet.getCustomerId(),
 				existingSourceWallet.getBalance(), transferPayment.getAmount(), DEBIT_ACTION);
@@ -224,18 +224,19 @@ public class WalletHandler implements ITransactionHandler<String, SawtoothWallet
 		log.info("Wallet updated for customer " + sourceWallet.getCustomerId() + "with balance "
 				+ updatedWallet.getBalance());
 
+		// Credit Dest Customer Account
 		Wallet destWallet = Wallet.newBuilder().setCustomerId(transferPayment.getDestCustomerId())
 				.setBalance(transferPayment.getAmount()).build();
 		walletValidator.validate(destWallet); // validate data.
 
-		address = walletAddressBuilder.buildAddress(sourceWallet); // build address.
+		address = walletAddressBuilder.buildAddress(destWallet); // build address.
 		Wallet existingDestWallet = walletDao.getLedgerEntry(state, address);
 
 		if (existingDestWallet == null) {
 			throw new InvalidTransactionException("No wallet found for customer "
 					+ sourceWallet.getCustomerId() + ". First create a wallet and then transfer.");
 		}
-		updatedWallet = updateWalletBalance(transactionRequest, sourceWallet.getCustomerId(),
+		updatedWallet = updateWalletBalance(transactionRequest, destWallet.getCustomerId(),
 				existingDestWallet.getBalance(), transferPayment.getAmount(), CREDIT_ACTION);
 		walletDao.putLedgerEntry(state, address, updatedWallet); // persist data.
 		log.info("Wallet updated for customer " + destWallet.getCustomerId() + "with balance "

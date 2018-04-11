@@ -24,7 +24,7 @@ public class WalletValidator implements IValidator<Wallet> {
 	@Override
 	public boolean validate(Wallet data) throws InvalidTransactionException {
 		if (data.getCustomerId() == null || data.getCustomerId().isEmpty())
-			throw new InvalidTransactionException("Asset[Name] cannot be empty or null.");
+			throw new InvalidTransactionException("Customer Id cannot be empty or null.");
 		return true;
 	}
 
