@@ -70,7 +70,7 @@ public abstract class ClientService<ENTITY,PAYLOAD> {
 		
 	}
 	
-	public String submitStateChangeMutiplePayloads(List<PAYLOAD> payloads) throws Exception {
+	public String submitStateChangeMutipleTransactions(List<PAYLOAD> payloads) throws Exception {
 		List<TransactionHeaderDTO> transactionHeaderDTOs = new ArrayList<>();
 		TransactionHeaderDTO transactionHeaderDTO = null;
 		for(PAYLOAD payload : payloads) {
@@ -79,6 +79,22 @@ public abstract class ClientService<ENTITY,PAYLOAD> {
 		}		
 		
 		BatchList batch = batchBuilder.buildBatch(transactionHeaderDTOs);
+		ByteString batchBytes = batch.toByteString();
+		Status response = template.submitBatch(batchBytes);
+		logger.info("Response for submission is : "+ response.getNumber());
+		return response.name();
+		
+	}
+	
+	public String submitStateChangeMutipleBatches(List<PAYLOAD> payloads) throws Exception {
+		List<TransactionHeaderDTO> transactionHeaderDTOs = new ArrayList<>();
+		TransactionHeaderDTO transactionHeaderDTO = null;
+		for(PAYLOAD payload : payloads) {
+			transactionHeaderDTO = transactionBuilder.buildTransaction(payload);
+			transactionHeaderDTOs.add(transactionHeaderDTO);
+		}		
+		
+		BatchList batch = batchBuilder.buildMultipleBatches(transactionHeaderDTOs);
 		ByteString batchBytes = batch.toByteString();
 		Status response = template.submitBatch(batchBytes);
 		logger.info("Response for submission is : "+ response.getNumber());

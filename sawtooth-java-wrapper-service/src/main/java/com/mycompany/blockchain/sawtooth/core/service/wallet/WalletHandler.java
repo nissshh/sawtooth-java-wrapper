@@ -149,7 +149,8 @@ public class WalletHandler implements ITransactionHandler<String, SawtoothWallet
 		String address = walletAddressBuilder.buildAddress(wallet); // build address.
 		Wallet existingWallet = walletDao.getLedgerEntry(state, address);
 
-		if (existingWallet == null) {
+		if (existingWallet == null || existingWallet.getCustomerId() == null
+				|| existingWallet.getCustomerId().isEmpty()) {
 			throw new InvalidTransactionException("No wallet found for customer "
 					+ wallet.getCustomerId() + ". First create a wallet and then deposit.");
 		}
@@ -179,7 +180,8 @@ public class WalletHandler implements ITransactionHandler<String, SawtoothWallet
 		String address = walletAddressBuilder.buildAddress(wallet); // build address.
 		Wallet existingWallet = walletDao.getLedgerEntry(state, address);
 
-		if (existingWallet == null) {
+		if (existingWallet == null || existingWallet.getCustomerId() == null
+				|| existingWallet.getCustomerId().isEmpty()) {
 			throw new InvalidTransactionException("No wallet found for customer "
 					+ wallet.getCustomerId() + ". First create a wallet and then withdraw.");
 		}
@@ -219,8 +221,9 @@ public class WalletHandler implements ITransactionHandler<String, SawtoothWallet
 					"No wallet found for customer " + sourceWallet.getCustomerId()
 							+ ". First create a wallet for Source customer and then transfer.");
 		}
-		Wallet updatedSourceWallet = updateWalletBalance(transactionRequest, sourceWallet.getCustomerId(),
-				existingSourceWallet.getBalance(), transferPayment.getAmount(), DEBIT_ACTION);
+		Wallet updatedSourceWallet = updateWalletBalance(transactionRequest,
+				sourceWallet.getCustomerId(), existingSourceWallet.getBalance(),
+				transferPayment.getAmount(), DEBIT_ACTION);
 
 		// Credit Dest Customer Account
 		Wallet destWallet = Wallet.newBuilder().setCustomerId(transferPayment.getDestCustomerId())
@@ -236,10 +239,11 @@ public class WalletHandler implements ITransactionHandler<String, SawtoothWallet
 					"No wallet found for customer " + sourceWallet.getCustomerId()
 							+ ". First create a wallet for target customer and then transfer.");
 		}
-		Wallet updateDestdWallet = updateWalletBalance(transactionRequest, destWallet.getCustomerId(),
-				existingDestWallet.getBalance(), transferPayment.getAmount(), CREDIT_ACTION);
-		
-		walletDao.putLedgerEntry(state, destAddress, updateDestdWallet); // persist data.		
+		Wallet updateDestdWallet = updateWalletBalance(transactionRequest,
+				destWallet.getCustomerId(), existingDestWallet.getBalance(),
+				transferPayment.getAmount(), CREDIT_ACTION);
+
+		walletDao.putLedgerEntry(state, destAddress, updateDestdWallet); // persist data.
 		walletDao.putLedgerEntry(state, sourceAddress, updatedSourceWallet); // persist data.
 		log.info("Wallet updated for customer " + sourceWallet.getCustomerId() + " with balance "
 				+ updateDestdWallet.getBalance());

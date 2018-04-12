@@ -46,16 +46,42 @@ class GenericBatchBuilder {
 		}
 
 		BatchHeader batchHeader = BatchHeader.newBuilder().clearSignerPublicKey()
-				.setSignerPublicKey(publicKeyHex).addAllTransactionIds(transactionIds).build();
+				.setSignerPublicKey(publicKeyHex)
+				.addAllTransactionIds(transactionIds).build();
 
 		ByteString batchHeaderBytes = batchHeader.toByteString();
 		String batchHeaderSignature = Signing.sign(signer.getSignerPrivateKey(),
 				batchHeader.toByteArray());
+		
 		Batch batch = Batch.newBuilder().setHeader(batchHeaderBytes)
 				.setHeaderSignature(batchHeaderSignature).setTrace(true)
 				.addAllTransactions(transactions).build();
 
 		BatchList batchList = BatchList.newBuilder().addBatches(batch).build();
+		return batchList;
+	}
+	
+	public BatchList buildMultipleBatches(List<TransactionHeaderDTO> transactionHeaderDTOs) {
+		String publicKeyHex = signer.getSignerPrivateKey().getPublicKeyAsHex();
+		List<Batch> batches = new ArrayList<>();
+		BatchHeader batchHeader = null;
+		Batch batch = null;
+
+		for (TransactionHeaderDTO transactionDTO : transactionHeaderDTOs) {
+			batchHeader = BatchHeader.newBuilder().clearSignerPublicKey()
+					.setSignerPublicKey(publicKeyHex)
+					.addTransactionIds(transactionDTO.getHeaderSignature()).build();
+
+			ByteString batchHeaderBytes = batchHeader.toByteString();
+			String batchHeaderSignature = Signing.sign(signer.getSignerPrivateKey(),
+					batchHeader.toByteArray());
+
+			batch = Batch.newBuilder().setHeader(batchHeaderBytes)
+					.setHeaderSignature(batchHeaderSignature).setTrace(true)
+					.addTransactions(transactionDTO.getTransaction()).build();
+			batches.add(batch);
+		}
+		BatchList batchList = BatchList.newBuilder().addAllBatches(batches).build();
 		return batchList;
 	}
 
