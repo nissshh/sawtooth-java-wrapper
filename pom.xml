@@ -9,6 +9,7 @@
 		<module>sawtooth-java-wrapper-model</module>
 		<module>sawtooth-java-wrapper-service</module>
 		<module>sawtooth-java-wrapper-client</module>
+		<module>sawtooth-asset-app</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
@@ -46,11 +47,6 @@
 				<artifactId>lombok</artifactId>
 				<version>1.16.20</version>
 				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-log4j12</artifactId>
-				<version>1.5.6</version>
 			</dependency>
 	</dependencies>
 	<build>

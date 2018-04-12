@@ -17,7 +17,7 @@ import com.mycompany.blockchain.sawtooth.core.service.IAddressBuilder;
 import com.mycompany.blockchain.sawtooth.core.service.IBaseDAO;
 import com.mycompany.blockchain.sawtooth.core.service.IEntityConvertor;
 import com.mycompany.blockchain.sawtooth.core.service.ITransactionHandler;
-import com.mycompany.blockchain.sawtooth.core.service.IValidator;
+import com.mycompany.blockchain.sawtooth.core.service.IDataValidator;
 import com.mycompany.blockchain.sawtooth.core.service.util.TPProcessRequestHelper;
 import com.mycompany.blockchain.sawtooth.intkey.protobuf.IntKeyVal;
 
@@ -54,7 +54,7 @@ public class IntKeyValTransactionHandler implements ITransactionHandler<String, 
 
 	private IEntityConvertor<ByteString,IntKeyVal,IntKeyValParser> entityConvertor;
 
-	private IValidator<String> validator;
+	private IDataValidator<String> validator;
 	
 	public IntKeyValTransactionHandler() {
 		entityConvertor = new IntKeyValConvertor(parser);

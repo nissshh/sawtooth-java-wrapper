@@ -7,13 +7,13 @@ option java_package = "com.mycompany.blockchain.sawtooth.mortgage.asset.protobuf
 message Asset {
 	//a user defined natural key for the asset
 	string id= 1;
-	//a user defined natural key for the asset
+	//a user defined natural key for the asset, this will be the addressing mechanism.
 	string name= 2;
 	//asset type  -- todo add as enum
 	string type= 3;
-	// asset value
+	// asset value, in terms of amount
 	uint32 value = 4;
-	// this field will hold pub-key for the holder of the asset
+	// this field will hold pub-key for the holder/owner of the asset
 	string public_key = 5;
 	// a free formed field to hold asset details.  todo - can be connected to the various asset like real,securities, abs etc.
 	string details = 6;
@@ -46,6 +46,7 @@ message CreateAsset {
     int32 value = 3;
     string pub_key = 4;
     string details= 5;
+    Asset asset = 6;
 }
 
 message UpdateAsset {

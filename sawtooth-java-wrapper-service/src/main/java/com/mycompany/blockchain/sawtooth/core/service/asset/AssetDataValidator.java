@@ -3,7 +3,7 @@
  */
 package com.mycompany.blockchain.sawtooth.core.service.asset;
 
-import com.mycompany.blockchain.sawtooth.core.service.IValidator;
+import com.mycompany.blockchain.sawtooth.core.service.IDataValidator;
 import com.mycompany.blockchain.sawtooth.mortgage.asset.protobuf.Asset;
 
 import sawtooth.sdk.processor.exceptions.InvalidTransactionException;
@@ -12,7 +12,7 @@ import sawtooth.sdk.processor.exceptions.InvalidTransactionException;
  * @author Nishant Sonar<nishant_sonar@yahoo.com>
  *
  */
-public class AssetValidator implements IValidator<Asset> {
+public class AssetDataValidator implements IDataValidator<Asset> {
 
 	/* (non-Javadoc)
 	 * @see com.mycompany.blockchain.sawtooth.core.service.IValidator#validate(java.lang.Object)

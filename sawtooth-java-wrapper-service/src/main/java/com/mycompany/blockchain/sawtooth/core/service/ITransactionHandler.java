@@ -43,7 +43,7 @@ public interface ITransactionHandler<KEY, ENTITY> extends TransactionHandler {
 	}
 
 	/**
-	 * provide an entity specific addres builder
+	 * provide an entity specific addres builderITransactionHandler
 	 * 
 	 * @return
 	 */

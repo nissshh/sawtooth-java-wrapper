@@ -5,7 +5,6 @@ package com.mycompany.blockchain.sawtooth.client.intkey;
 
 import com.mycompany.blockchain.sawtooth.client.ClientService;
 import com.mycompany.blockchain.sawtooth.client.GenericTransactionBuilder;
-import com.mycompany.blockchain.sawtooth.client.IntkeyTransactionBuilder;
 import com.mycompany.blockchain.sawtooth.core.service.IAddressBuilder;
 import com.mycompany.blockchain.sawtooth.core.service.imple.intkeyval.IntKeyAddressBuilder;
 
