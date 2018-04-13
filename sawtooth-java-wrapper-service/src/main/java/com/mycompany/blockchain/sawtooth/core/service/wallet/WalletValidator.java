@@ -3,7 +3,7 @@
  */
 package com.mycompany.blockchain.sawtooth.core.service.wallet;
 
-import com.mycompany.blockchain.sawtooth.core.service.IValidator;
+import com.mycompany.blockchain.sawtooth.core.service.IDataValidator;
 import com.mycompany.blockchain.sawtooth.wallet.protobuf.Wallet;
 
 import sawtooth.sdk.processor.exceptions.InvalidTransactionException;
@@ -12,7 +12,7 @@ import sawtooth.sdk.processor.exceptions.InvalidTransactionException;
  * @author Nishant Sonar<nishant_sonar@yahoo.com>
  *
  */
-public class WalletValidator implements IValidator<Wallet> {
+public class WalletValidator implements IDataValidator<Wallet> {
 
 	/*
 	 * (non-Javadoc)
