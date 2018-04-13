@@ -44,11 +44,11 @@ public interface IAddressBuilder<ENTITY> {
 	String getTransactionFamilyVersion();
 
 	/**
-	 * Provides the way entity key is calculated, can be of certaintype
+	 * Provides the way entity key is calculated, can be of certain type
 	 * 
 	 * E.g for Item it could be ItemName+Color+Shape as key
 	 * @param entity
-	 * @return
+	 * @return a unmique identitfer for an entity to be then further used as address.
 	 */
 	String getEntityKey(ENTITY entity);
 

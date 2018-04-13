@@ -3,7 +3,7 @@
  */
 package com.mycompany.blockchain.sawtooth.core.service.impl.string;
 
-import com.mycompany.blockchain.sawtooth.core.service.IValidator;
+import com.mycompany.blockchain.sawtooth.core.service.IDataValidator;
 
 import sawtooth.sdk.processor.exceptions.InvalidTransactionException;
 
@@ -14,7 +14,7 @@ import sawtooth.sdk.processor.exceptions.InvalidTransactionException;
  * @author Nishant Sonar<nishant_sonar@yahoo.com>
  *
  */
-public class StringValidator implements IValidator<String> {
+public class StringValidator implements IDataValidator<String> {
 
 	@Override
 	public boolean validate(String data) throws InvalidTransactionException {

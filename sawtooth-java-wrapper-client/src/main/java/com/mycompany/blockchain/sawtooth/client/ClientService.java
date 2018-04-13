@@ -58,14 +58,12 @@ public abstract class ClientService<ENTITY,PAYLOAD> {
 	}
 
 
-	public String submitStateChange(PAYLOAD payload) throws Exception {
+	public Status submitStateChange(PAYLOAD payload) throws Exception {
 		TransactionHeaderDTO transaction = transactionBuilder.buildTransaction(payload);
 		BatchList batch = batchBuilder.buildBatch(transaction);
 		ByteString batchBytes = batch.toByteString();
 		Status response = template.submitBatch(batchBytes);
-		logger.info("Response for submission is : "+ response.getNumber());
-		return response.name();
-		
+		return response;		
 	}
 	
 	public void requestState(PAYLOAD payload) {
@@ -130,4 +128,24 @@ public abstract class ClientService<ENTITY,PAYLOAD> {
 	public abstract IAddressBuilder<ENTITY> getiAddressBuilder();
 
 	public abstract GenericTransactionBuilder<ENTITY,PAYLOAD>  getTransactionBuilder();
+
+
+	public ClientZMQTemplate getTemplate() {
+		return template;
+	}
+
+
+	public void setTemplate(ClientZMQTemplate template) {
+		this.template = template;
+	}
+
+
+	public void setTransactionBuilder(GenericTransactionBuilder<ENTITY, PAYLOAD> transactionBuilder) {
+		this.transactionBuilder = transactionBuilder;
+	}
+
+
+	public void setiAddressBuilder(IAddressBuilder<ENTITY> iAddressBuilder) {
+		this.iAddressBuilder = iAddressBuilder;
+	}
 }

@@ -42,4 +42,6 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
+	<name>Sawtooth Framework Client</name>
+	<url>A Sawtooth Framework Client containg client helper classes.</url>
 </project>

@@ -10,9 +10,9 @@ import java.io.IOException;
  * byte/string) to another 
  * @author Nishant Sonar<nishant_sonar@yahoo.com>
  *
- * @param <CORE>    core data
- * @param <ENTITY>  target entity
- * @param <PARSER>  parser to parse core data
+ * @param <CORE>    core data , can be byte[],ByteString,String
+ * @param <ENTITY>  target entity also can be a payload.
+ * @param <PARSER>  parser to parse core data, if a complex parsig like encoding and decoding is required.
  */
 public interface IEntityConvertor<CORE, ENTITY, PARSER> {
 

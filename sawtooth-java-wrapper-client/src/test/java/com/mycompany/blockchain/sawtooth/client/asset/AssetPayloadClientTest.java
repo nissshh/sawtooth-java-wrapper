@@ -19,6 +19,8 @@ import com.mycompany.blockchain.sawtooth.mortgage.asset.protobuf.AssetPayload.Pa
 import com.mycompany.blockchain.sawtooth.mortgage.asset.protobuf.CreateAsset;
 import com.mycompany.blockchain.sawtooth.mortgage.asset.protobuf.UpdateAsset;
 
+import sawtooth.sdk.protobuf.ClientBatchSubmitResponse.Status;
+
 public class AssetPayloadClientTest extends BaseClientTest {
 	
 	Logger logger = Logger.getLogger(AssetPayloadClientTest.class.getName());
@@ -47,10 +49,8 @@ public class AssetPayloadClientTest extends BaseClientTest {
 				.setPayloadType(PayloadType.CREATE_ASSET)
 				.build();
 		logger.info("Sending Payload as " + payload);
-		String resposne = service.submitStateChange(payload);
+		Status resposne = service.submitStateChange(payload);
 		logger.info("State Change responsed from client Service : " + resposne);
-		//92a8fd1ae7d38c35cf3201eba5d56d87554ab88bfc8cbf126858de412b78ce4b28c3b7
-		//92a8fd1ae7d38c35cf3201eba5d56d87554ab88bfc8cbf126858de412b78ce4b28c3b7
 		Asset asset = Asset.getDefaultInstance().newBuilder().setName(assetName).build();
 		String address_mobile = new AssetAddressBuilder("asset","1.0").buildAddress(asset);
 		System.out.println("Getting data for at address   :    "+address_mobile);
@@ -80,7 +80,7 @@ public class AssetPayloadClientTest extends BaseClientTest {
 				.setPayloadType(PayloadType.UPDATE_ASSET)
 				.build();
 		logger.info("Sending Payload as " + payload);
-		String resposne = service.submitStateChange(payload);
+		Status resposne = service.submitStateChange(payload);
 		logger.info("Response from client Service : " + resposne);
 	}
 

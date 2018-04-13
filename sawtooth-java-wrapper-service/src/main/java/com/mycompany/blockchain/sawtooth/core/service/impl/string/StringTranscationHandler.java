@@ -10,7 +10,7 @@ import com.mycompany.blockchain.sawtooth.core.service.IAddressBuilder;
 import com.mycompany.blockchain.sawtooth.core.service.IBaseDAO;
 import com.mycompany.blockchain.sawtooth.core.service.IEntityConvertor;
 import com.mycompany.blockchain.sawtooth.core.service.ITransactionHandler;
-import com.mycompany.blockchain.sawtooth.core.service.IValidator;
+import com.mycompany.blockchain.sawtooth.core.service.IDataValidator;
 import com.mycompany.blockchain.sawtooth.core.service.util.TPProcessRequestHelper;
 
 import sawtooth.sdk.processor.State;
@@ -41,7 +41,7 @@ public class StringTranscationHandler implements ITransactionHandler<String, Str
 	
 	private IEntityConvertor<String,String,StringToStringParser> entityConvertor;
 
-	private IValidator<String> validator;
+	private IDataValidator<String> validator;
 	
 	public StringTranscationHandler() {
 		txnFamilyName = TXN_FAMILY_NAME;

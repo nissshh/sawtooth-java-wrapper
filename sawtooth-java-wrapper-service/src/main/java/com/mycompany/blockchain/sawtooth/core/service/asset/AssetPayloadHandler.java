@@ -12,7 +12,7 @@ import com.mycompany.blockchain.sawtooth.core.service.IAddressBuilder;
 import com.mycompany.blockchain.sawtooth.core.service.IBaseDAO;
 import com.mycompany.blockchain.sawtooth.core.service.IEntityConvertor;
 import com.mycompany.blockchain.sawtooth.core.service.ITransactionHandler;
-import com.mycompany.blockchain.sawtooth.core.service.IValidator;
+import com.mycompany.blockchain.sawtooth.core.service.IDataValidator;
 //import com.mycompany.blockchain.sawtooth.intkey.protobuf.IntKeyValuePayload.PayloadType;
 import com.mycompany.blockchain.sawtooth.mortgage.asset.protobuf.Asset;
 import com.mycompany.blockchain.sawtooth.mortgage.asset.protobuf.AssetPayload;
@@ -28,13 +28,14 @@ import sawtooth.sdk.processor.exceptions.InvalidTransactionException;
 import sawtooth.sdk.protobuf.TpProcessRequest;
 
 /**
+ * An implementation to do Asset based CRUD operations.
  * 
  * @author Nishant Sonar<nishant_sonar@yahoo.com>
  *
  */
-public class AssetHandler implements ITransactionHandler<String, AssetPayload> {
+public class AssetPayloadHandler implements ITransactionHandler<String, AssetPayload> {
 	
-	Logger log = Logger.getLogger(AssetHandler.class.getName());
+	Logger log = Logger.getLogger(AssetPayloadHandler.class.getName());
 	
 	public static final String TX_FAMILY_NAME="asset";
 	
@@ -45,7 +46,7 @@ public class AssetHandler implements ITransactionHandler<String, AssetPayload> {
 
 	private IEntityConvertor<ByteString,AssetPayload,AssetPayloadParser> entityConvertor;
 
-	private IValidator<Asset> assetValidator;
+	private IDataValidator<Asset> assetValidator;
 	
 	private AssetPayloadParser assetPayloadParser;
 	
@@ -62,12 +63,12 @@ public class AssetHandler implements ITransactionHandler<String, AssetPayload> {
 	}
 
 	
-	public AssetHandler() {
+	public AssetPayloadHandler() {
 		assetAddressBuilder = new AssetAddressBuilder(transactionFamilyName(),getVersion());
 		assetPayloadParser = new AssetPayloadParser();
 		entityConvertor = new AssetPayloadConvertor(assetPayloadParser);
 		assetDao= new AssetDAO();
-		assetValidator= new AssetValidator();
+		assetValidator= new AssetDataValidator();
 	}
 	
 	@Override
