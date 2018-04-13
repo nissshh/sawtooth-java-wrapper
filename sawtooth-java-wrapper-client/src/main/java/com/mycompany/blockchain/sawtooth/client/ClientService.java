@@ -1,5 +1,7 @@
 package com.mycompany.blockchain.sawtooth.client;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import com.google.protobuf.ByteString;
@@ -64,6 +66,38 @@ public abstract class ClientService<ENTITY,PAYLOAD> {
 		ByteString batchBytes = batch.toByteString();
 		Status response = template.submitBatch(batchBytes);
 		return response;		
+	}
+	
+	public String submitStateChangeMutipleTransactions(List<PAYLOAD> payloads) throws Exception {
+		List<TransactionHeaderDTO> transactionHeaderDTOs = new ArrayList<>();
+		TransactionHeaderDTO transactionHeaderDTO = null;
+		for(PAYLOAD payload : payloads) {
+			transactionHeaderDTO = transactionBuilder.buildTransaction(payload);
+			transactionHeaderDTOs.add(transactionHeaderDTO);
+		}		
+		
+		BatchList batch = batchBuilder.buildBatch(transactionHeaderDTOs);
+		ByteString batchBytes = batch.toByteString();
+		Status response = template.submitBatch(batchBytes);
+		logger.info("Response for submission is : "+ response.getNumber());
+		return response.name();
+		
+	}
+	
+	public String submitStateChangeMutipleBatches(List<PAYLOAD> payloads) throws Exception {
+		List<TransactionHeaderDTO> transactionHeaderDTOs = new ArrayList<>();
+		TransactionHeaderDTO transactionHeaderDTO = null;
+		for(PAYLOAD payload : payloads) {
+			transactionHeaderDTO = transactionBuilder.buildTransaction(payload);
+			transactionHeaderDTOs.add(transactionHeaderDTO);
+		}		
+		
+		BatchList batch = batchBuilder.buildMultipleBatches(transactionHeaderDTOs);
+		ByteString batchBytes = batch.toByteString();
+		Status response = template.submitBatch(batchBytes);
+		logger.info("Response for submission is : "+ response.getNumber());
+		return response.name();
+		
 	}
 	
 	public void requestState(PAYLOAD payload) {
