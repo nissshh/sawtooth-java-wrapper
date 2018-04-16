@@ -17,4 +17,6 @@ public class WalletVO {
 	String customerId;
 	
 	int balance;
+	
+	String destCustomerId; 
 }
