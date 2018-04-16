@@ -11,7 +11,7 @@ import com.mycompany.blockchain.sawtooth.core.service.IAddressBuilder;
 import com.mycompany.blockchain.sawtooth.core.service.IBaseDAO;
 import com.mycompany.blockchain.sawtooth.core.service.IEntityConvertor;
 import com.mycompany.blockchain.sawtooth.core.service.ITransactionHandler;
-import com.mycompany.blockchain.sawtooth.core.service.IValidator;
+import com.mycompany.blockchain.sawtooth.core.service.IDataValidator;
 import com.mycompany.blockchain.sawtooth.wallet.protobuf.SawtoothWalletPayload;
 import com.mycompany.blockchain.sawtooth.wallet.protobuf.SawtoothWalletPayload.CreateWallet;
 import com.mycompany.blockchain.sawtooth.wallet.protobuf.SawtoothWalletPayload.Deposit;
@@ -46,7 +46,7 @@ public class WalletHandler implements ITransactionHandler<String, SawtoothWallet
 
 	private IEntityConvertor<ByteString, SawtoothWalletPayload, WalletPayloadParser> entityConvertor;
 
-	private IValidator<Wallet> walletValidator;
+	private IDataValidator<Wallet> walletValidator;
 
 	private WalletPayloadParser walletPayloadParser;
 

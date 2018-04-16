@@ -12,15 +12,16 @@ public class Signer {
 	/**
 	 * The user / signer private key
 	 */
-	private String signerKey;
+	private String signerWIFKey;
 
 	/**
 	 * ECKEy
 	 */
 	private ECKey privateKey = null;
-	
-	public Signer(String privateKey) {
-		this.signerKey = privateKey;
+
+	public Signer(String privateWIFKey) {
+		this.signerWIFKey = privateWIFKey;
+
 	}
 
 	/**
@@ -30,8 +31,8 @@ public class Signer {
 	 */
 	public ECKey getSignerPrivateKey() {
 		if (privateKey == null) {
-			if (signerKey != null) {
-				privateKey = Signing.readWif(signerKey); //:todo - check for this implementaion for siging to be workgni
+			if (signerWIFKey != null) {
+				privateKey = Signing.readWif(signerWIFKey);
 				logger.info("Signer Key is set from supplied Private Key");
 			} else {
 				privateKey = Signing.generatePrivateKey(null); // new random privatekey
