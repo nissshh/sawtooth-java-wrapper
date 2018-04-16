@@ -76,25 +76,31 @@ message LoanRequestPayload {
 	    string id = 1;
 	    
 	    //Customer Id of the Lender of the loan
-	    string lender_id = 3;
+	    string lender_id = 2;
 	    
 	    //Customer Id of the Borrower of the loan
-	    string borrower_id = 4;
+	    string borrower_id = 3;
 	    
 	    //Loan Rate of Interest
-	    float roi = 5;
+	    float roi = 4;
 	    
 	    //Asset id against which the loan will be requested
-	    string asset_id = 6;
+	    string asset_id = 5;
 	    
 	    //Loan Status. Can be - Requested/Approved/Active/Closed
-	    LoanStatus status = 7;
+	    LoanStatus status = 6;
 	    
 	    //Loan amount approved against the asset and borrower income 
-	    uint32 approved_amt = 8;
-	    
-	    //Loan amount which borrower has requested for
-	    uint32 requested_amt = 9;  
+	    uint32 approved_amt = 7;
+    }  
+    
+     message MonthlyPayment {
+			    
+	    //Asset id against which the loan will be requested
+	    string asset_id = 1;
+
+		// Payment Details	    
+	    Payment payment = 2;  
     }  
         
     enum PayloadType {        
@@ -106,18 +112,18 @@ message LoanRequestPayload {
     PayloadType payload_type = 1;
     CreateLoanRequest create_loan_request = 2;
     ApproveLoanRequest approve_loan_request = 3;    
-    Payment monthly_payment = 4;
+    MonthlyPayment monthly_payment = 4;
 }
 
 message Payment {
-	// laon ID
+	// payment ID
     string id = 1;
     
     //Customer Id of the Borrower of the loan
-    string borrower_id = 2;
+    string from = 2;
     
     //Customer Id of the Lender of the loan
-    string lender_id = 3;
+    string to = 3;
     
     //Amount which borrower is paying against loan 
     uint32 amount =  4; 
