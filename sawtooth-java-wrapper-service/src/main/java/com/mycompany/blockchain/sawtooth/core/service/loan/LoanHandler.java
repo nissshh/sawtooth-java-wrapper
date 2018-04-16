@@ -16,7 +16,7 @@ import com.mycompany.blockchain.sawtooth.loan.protobuf.Loan;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.ApproveLoanRequest;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.CreateLoanRequest;
-import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.MonthlyPayment;
+import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.LoanPaymentPayload;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanStatus;
 import com.mycompany.blockchain.sawtooth.wallet.protobuf.SawtoothWalletPayload;
 
@@ -169,7 +169,7 @@ public class LoanHandler implements ITransactionHandler<String, SawtoothWalletPa
 	 * @throws InternalError
 	 */
 	private void mothlyPayment(TpProcessRequest transactionRequest, State state,
-			MonthlyPayment monthlyPayment)
+			LoanPaymentPayload monthlyPayment)
 			throws InvalidTransactionException, InternalError, IOException {
 		log.info("Inside depositToWallet()");
 		Loan loan = Loan.newBuilder().setBorrowerId(monthlyPayment.getPayment().getFrom())

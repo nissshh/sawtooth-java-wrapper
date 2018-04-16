@@ -94,14 +94,10 @@ message LoanRequestPayload {
 	    uint32 approved_amt = 7;
     }  
     
-     message MonthlyPayment {
-			    
-	    //Asset id against which the loan will be requested
-	    string asset_id = 1;
-
-		// Payment Details	    
-	    Payment payment = 2;  
-    }  
+     message LoanPaymentPayload {
+     	string asset_id = 1;
+     	Payment payment = 2;
+     }
         
     enum PayloadType {        
         CREATE_LOAN = 0;
@@ -112,7 +108,7 @@ message LoanRequestPayload {
     PayloadType payload_type = 1;
     CreateLoanRequest create_loan_request = 2;
     ApproveLoanRequest approve_loan_request = 3;    
-    MonthlyPayment monthly_payment = 4;
+    LoanPaymentPayload monthly_payment = 4;
 }
 
 message Payment {
@@ -128,6 +124,17 @@ message Payment {
     //Amount which borrower is paying against loan 
     uint32 amount =  4; 
 } 
+
+message PaymentPayload {			    
+    
+     enum PaymentPayloadType {        
+        CREATE_PAYMENT = 0;              
+    }
+    
+    PaymentPayloadType paylod_type = 1;
+	// Payment Details	    
+    Payment payment = 2;  
+}
 
 enum LoanStatus {        
     REQUESTED = 0;
