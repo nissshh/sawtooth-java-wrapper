@@ -37,7 +37,7 @@ message Loan {
     string asset_id = 6;
     
     //Loan Status. Can be - Requested/Approved/Active/Closed
-    string status = 7;
+    LoanStatus status = 7;
     
     //Payments Made against the loan
     repeated Payment payments = 8;
@@ -88,7 +88,7 @@ message LoanRequestPayload {
 	    string asset_id = 6;
 	    
 	    //Loan Status. Can be - Requested/Approved/Active/Closed
-	    string status = 7;
+	    LoanStatus status = 7;
 	    
 	    //Loan amount approved against the asset and borrower income 
 	    uint32 approved_amt = 8;
@@ -96,15 +96,13 @@ message LoanRequestPayload {
 	    //Loan amount which borrower has requested for
 	    uint32 requested_amt = 9;  
     }  
-    
-    
-
+        
     enum PayloadType {        
         CREATE_LOAN = 0;
         APPROVE_LOAN = 1;  
         MONTHLY_PAYMENT = 2;      
     }
-
+    
     PayloadType payload_type = 1;
     CreateLoanRequest create_loan_request = 2;
     ApproveLoanRequest approve_loan_request = 3;    
@@ -124,3 +122,10 @@ message Payment {
     //Amount which borrower is paying against loan 
     uint32 amount =  4; 
 } 
+
+enum LoanStatus {        
+    REQUESTED = 0;
+    APPROVED = 1;  
+    ACTIVE = 2;
+    CLOSED = 3;      
+}
