@@ -75,7 +75,7 @@ public class WalletController {
 		return response.getNumber();
 	}
 
-	@RequestMapping(consumes = "application/json", method = RequestMethod.POST, path = "/deposit")
+	@RequestMapping(consumes = "application/json", method = RequestMethod.POST, path = "/wallet/deposit")
 	public @ResponseBody int deposit(@RequestBody WalletVO walletVo) throws Exception {
 		Deposit depositWallet = Deposit.newBuilder().setCustomerId(walletVo.getCustomerId())
 				.setAmount(walletVo.getBalance()).build();
@@ -88,7 +88,7 @@ public class WalletController {
 		return response.getNumber();
 	}
 
-	@RequestMapping(consumes = "application/json", method = RequestMethod.POST, path = "/withdraw")
+	@RequestMapping(consumes = "application/json", method = RequestMethod.POST, path = "/wallet/withdraw")
 	public @ResponseBody int withdraw(@RequestBody WalletVO walletVo) throws Exception {
 		Withdraw withdrawWallet = Withdraw.newBuilder().setCustomerId(walletVo.getCustomerId())
 				.setAmount(walletVo.getBalance()).build();
@@ -101,7 +101,7 @@ public class WalletController {
 		return response.getNumber();
 	}
 
-	@RequestMapping(consumes = "application/json", method = RequestMethod.POST, path = "/transfer")
+	@RequestMapping(consumes = "application/json", method = RequestMethod.POST, path = "/wallet/transfer")
 	public @ResponseBody int transferWallet(@RequestBody WalletVO walletVo) throws Exception {
 		TransferPayment transferPayment = TransferPayment.newBuilder()
 				.setSourceCustomerId(walletVo.getCustomerId()).setAmount(walletVo.getBalance())
