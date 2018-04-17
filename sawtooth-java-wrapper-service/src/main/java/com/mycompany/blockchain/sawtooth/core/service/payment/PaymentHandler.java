@@ -71,7 +71,7 @@ public class PaymentHandler implements ITransactionHandler<String, SawtoothWalle
 			PaymentPayload paymentPayload = entityConvertor
 					.convert(transactionRequest.getPayload());
 			switch (paymentPayload.getPaylodType()) {
-			case CREATE_PAYMENT:
+			case PAY:
 				createPayment(transactionRequest, state, paymentPayload);
 				break;
 

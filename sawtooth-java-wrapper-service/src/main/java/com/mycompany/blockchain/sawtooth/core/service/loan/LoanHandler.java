@@ -4,6 +4,8 @@
 package com.mycompany.blockchain.sawtooth.core.service.loan;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import com.google.protobuf.ByteString;
@@ -18,6 +20,7 @@ import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.Approv
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.CreateLoanRequest;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.LoanPaymentPayload;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanStatus;
+import com.mycompany.blockchain.sawtooth.loan.protobuf.Payment;
 import com.mycompany.blockchain.sawtooth.wallet.protobuf.SawtoothWalletPayload;
 
 import sawtooth.sdk.processor.State;
@@ -30,7 +33,7 @@ import sawtooth.sdk.protobuf.TpProcessRequest;
  * @author Sandip Nirmal
  *
  */
-public class LoanHandler implements ITransactionHandler<String, SawtoothWalletPayload> {
+public class LoanHandler implements ITransactionHandler<String, LoanRequestPayload> {
 
 	Logger log = Logger.getLogger(LoanHandler.class.getName());
 
@@ -140,7 +143,7 @@ public class LoanHandler implements ITransactionHandler<String, SawtoothWalletPa
 	private void approveLoanRequest(TpProcessRequest transactionRequest, State state,
 			ApproveLoanRequest approveLoanRequest)
 			throws InvalidTransactionException, InternalError, IOException {
-		log.info("Inside depositToWallet()");
+		log.info("Inside approveLoanRequest()");
 		Loan loan = getLoan(transactionRequest, approveLoanRequest); // build data.
 		loanValidator.validate(loan); // validate data.
 
@@ -159,7 +162,7 @@ public class LoanHandler implements ITransactionHandler<String, SawtoothWalletPa
 	}
 
 	/**
-	 * Handles Action - Deposit to Wallet
+	 * Handles Action - Monthly Payments against Loan
 	 * 
 	 * @param transactionRequest
 	 * @param state
@@ -171,7 +174,7 @@ public class LoanHandler implements ITransactionHandler<String, SawtoothWalletPa
 	private void mothlyPayment(TpProcessRequest transactionRequest, State state,
 			LoanPaymentPayload monthlyPayment)
 			throws InvalidTransactionException, InternalError, IOException {
-		log.info("Inside depositToWallet()");
+		log.info("Inside mothlyPayment()");
 		Loan loan = Loan.newBuilder().setBorrowerId(monthlyPayment.getPayment().getFrom())
 				.setLenderId(monthlyPayment.getPayment().getTo())
 				.setAssetId(monthlyPayment.getAssetId()).build();
@@ -180,14 +183,17 @@ public class LoanHandler implements ITransactionHandler<String, SawtoothWalletPa
 		String address = loanAddressBuilder.buildAddress(loan); // build address.
 		Loan existingLoan = loanDao.getLedgerEntry(state, address);
 
-		if (existingLoan == null || existingLoan.getAssetId() == null
-				|| existingLoan.getAssetId().isEmpty()) {
+		if (!loanValidator.validate(existingLoan)) {
 			throw new InvalidTransactionException("No Loan Request found for Asset Id "
-					+ loan.getAssetId() + ". First create Loan Request.");
+					+ loan.getAssetId() + " Borrower Id " + loan.getBorrowerId() + " Lender Id"
+					+ loan.getLenderId() + ". First create Loan Request.");
 		}
-		existingLoan.getPaymentsList().add(monthlyPayment.getPayment());
-		loanDao.putLedgerEntry(state, address, loan); // persist data.
-		log.info("Loan approved for Asset Id " + loan.getAssetId());
+		
+		Loan updatedLoan = updateMontlyPayment(transactionRequest, monthlyPayment.getPayment(), existingLoan);
+		
+		loanDao.putLedgerEntry(state, address, updatedLoan); // persist data.
+		log.info("EMI for Loan paid. AsssetId:" + loan.getAssetId() + " LenderId:"
+				+ loan.getLenderId() + " Borrower Id:" + loan.getLenderId());
 	}
 
 	/**
@@ -216,7 +222,7 @@ public class LoanHandler implements ITransactionHandler<String, SawtoothWalletPa
 			ApproveLoanRequest approvedLoanRequest) {
 		return Loan.newBuilder().setAssetId(approvedLoanRequest.getAssetId())
 				.setBorrowerId(approvedLoanRequest.getBorrowerId())
-				.setLenderId(approvedLoanRequest.getLenderId())				
+				.setLenderId(approvedLoanRequest.getLenderId())
 				.setApprovedAmt(approvedLoanRequest.getApprovedAmt())
 				.setRoi(approvedLoanRequest.getRoi()).build();
 	}
@@ -236,14 +242,33 @@ public class LoanHandler implements ITransactionHandler<String, SawtoothWalletPa
 				.setRoi(approveLoanRequest.getRoi()).setStatus(approveLoanRequest.getStatus())
 				.build();
 	}
+	
+	/**
+	 * Update Monthly Payment in the Loan
+	 * @param transactionRequest
+	 * @param payment
+	 * @param existingLoan
+	 * @return
+	 */
+	private Loan updateMontlyPayment(TpProcessRequest transactionRequest,
+			Payment payment, Loan existingLoan) {
+		List<Payment> paymentsList = new ArrayList<Payment>();
+		existingLoan.getPaymentsList().forEach(p -> paymentsList.add(p));
+		paymentsList.add(payment);
+		return Loan.newBuilder().setAssetId(existingLoan.getAssetId()).setBorrowerId(existingLoan.getBorrowerId())
+				.setLenderId(existingLoan.getLenderId()).setRequestedAmt(existingLoan.getRequestedAmt())
+				.setApprovedAmt(existingLoan.getApprovedAmt()).setId(existingLoan.getId()).setBalance(existingLoan.getBalance())
+				.setRoi(existingLoan.getRoi()).setStatus(existingLoan.getStatus()).addAllPayments(paymentsList)
+				.build();
+	}
 
 	@Override
-	public IAddressBuilder<SawtoothWalletPayload> getAddressBuilder() {
+	public IAddressBuilder<LoanRequestPayload> getAddressBuilder() {
 		return null;
 	}
 
 	@Override
-	public IBaseDAO<String, SawtoothWalletPayload> getBaseDAO() {
+	public IBaseDAO<String, LoanRequestPayload> getBaseDAO() {
 		return null;
 	}
 

@@ -18,7 +18,9 @@ import com.mycompany.blockchain.sawtooth.loan.protobuf.Loan;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.ApproveLoanRequest;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.CreateLoanRequest;
+import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.LoanPaymentPayload;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.PayloadType;
+import com.mycompany.blockchain.sawtooth.loan.protobuf.Payment;
 
 import sawtooth.sdk.processor.exceptions.ValidatorConnectionError;
 import sawtooth.sdk.protobuf.ClientBatchSubmitResponse.Status;
@@ -65,6 +67,31 @@ public class LoanPayloadClientTest extends BaseClientTest {
 				.build();
 
 		logger.info("Sending Payload as " + payload);
+		Status resposne = service.submitStateChange(payload);
+		logger.info("State Change responsed from client Service : " + resposne);
+	}
+	
+	@Test
+	public void testPayLoanEmi() throws Exception {
+
+		Payment payment = Payment.getDefaultInstance().newBuilder().setFrom(borrowerId)
+				.setTo(lenderId).setAmount(1000).setId("P003").build();
+
+		// Payment Transaction Processor
+		//PaymentPayload paymentPayload = PaymentPayload.newBuilder()
+		//		.setPaylodType(PaymentPayloadType.PAY).setPayment(payment).build();
+		//logger.info("Sending Payment Payload as " + paymentPayload);
+		//PaymentPayloadClientService paymentService = new PaymentPayloadClientService("payment", "1.0", null, getZMQAddress());
+		//Status resposne = paymentService.submitStateChange(paymentPayload);
+		//logger.info("State Change responsed from client Service : " + resposne);
+
+		// Loan Transaction Processor
+		LoanPaymentPayload loanPaymentPayload = LoanPaymentPayload.newBuilder().setPayment(payment)
+				.setAssetId(assetId).build();
+		LoanRequestPayload payload = LoanRequestPayload.newBuilder()
+				.setMonthlyPayment(loanPaymentPayload).setPayloadType(PayloadType.MONTHLY_PAYMENT)
+				.build();
+		logger.info("Sending Loan Payment Payload as " + payload);
 		Status resposne = service.submitStateChange(payload);
 		logger.info("State Change responsed from client Service : " + resposne);
 	}
