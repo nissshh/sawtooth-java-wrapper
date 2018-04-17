@@ -52,8 +52,6 @@ message Loan {
 
 message LoanRequestPayload {
     message CreateLoanRequest {
-         // laon ID
-	    string id = 1;
 	    
 	    //Customer Id of the Lender of the loan
 	    string lender_id = 2;
@@ -72,8 +70,6 @@ message LoanRequestPayload {
     }
 
     message ApproveLoanRequest {
-		// laon ID
-	    string id = 1;
 	    
 	    //Customer Id of the Lender of the loan
 	    string lender_id = 2;

@@ -10,6 +10,8 @@ import org.junit.Test;
 import com.mycompany.blockchain.sawtooth.client.BaseClientTest;
 import com.mycompany.blockchain.sawtooth.client.ClientService;
 
+import sawtooth.sdk.protobuf.ClientBatchSubmitResponse.Status;
+
 /**
  * @author Nishant Sonar<nishant_sonar@yahoo.com>
  *
@@ -22,7 +24,7 @@ public class IntKeyClientTest extends BaseClientTest{
 	public void test() throws Exception {
 		String payload = new String("inc sonar 10");
 		System.out.println("Sending Payload as "+payload);
-		String resposne = service.submitStateChange(payload);
+		Status resposne = service.submitStateChange(payload);
 		logger.info("Response from client Service : "+resposne);
 	}
 

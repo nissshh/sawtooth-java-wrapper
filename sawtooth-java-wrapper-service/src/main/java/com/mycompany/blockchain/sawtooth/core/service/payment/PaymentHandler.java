@@ -35,15 +35,15 @@ public class PaymentHandler implements ITransactionHandler<String, SawtoothWalle
 	public static final String TX_FAMILY_VER = "1.0";
 
 	// framwork usable classes
-	private IAddressBuilder<Payment> loanAddressBuilder;
+	private IAddressBuilder<Payment> paymentAddressBuilder;
 
 	private IEntityConvertor<ByteString, PaymentPayload, PaymentPayloadParser> entityConvertor;
 
-	private IDataValidator<Payment> loanValidator;
+	private IDataValidator<Payment> paymentValidator;
 
-	private PaymentPayloadParser loanPayloadParser;
+	private PaymentPayloadParser paymentPayloadParser;
 
-	private IBaseDAO<String, Payment> loanDao;
+	private IBaseDAO<String, Payment> paymentDao;
 
 	@Override
 	public String transactionFamilyName() {
@@ -56,11 +56,11 @@ public class PaymentHandler implements ITransactionHandler<String, SawtoothWalle
 	}
 
 	public PaymentHandler() {
-		loanAddressBuilder = new PaymentAddressBuilder(transactionFamilyName(), getVersion());
-		loanPayloadParser = new PaymentPayloadParser();
-		entityConvertor = new PaymentPayloadConvertor(loanPayloadParser);
-		loanDao = new PaymentDAO();
-		loanValidator = new PaymentValidator();
+		paymentAddressBuilder = new PaymentAddressBuilder(transactionFamilyName(), getVersion());
+		paymentPayloadParser = new PaymentPayloadParser();
+		entityConvertor = new PaymentPayloadConvertor(paymentPayloadParser);
+		paymentDao = new PaymentDAO();
+		paymentValidator = new PaymentValidator();
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class PaymentHandler implements ITransactionHandler<String, SawtoothWalle
 			case CREATE_PAYMENT:
 				createPayment(transactionRequest, state, paymentPayload);
 				break;
-			
+
 			default:
 				throw new InvalidTransactionException("Invalid Operation...");
 			}
@@ -86,6 +86,7 @@ public class PaymentHandler implements ITransactionHandler<String, SawtoothWalle
 
 	/**
 	 * Method to Store Payment details in to the blockchain.
+	 * 
 	 * @param transactionRequest
 	 * @param state
 	 * @param paymentPayload
@@ -93,20 +94,20 @@ public class PaymentHandler implements ITransactionHandler<String, SawtoothWalle
 	 * @throws InternalError
 	 * @throws IOException
 	 */
-	 
+
 	private void createPayment(TpProcessRequest transactionRequest, State state,
 			PaymentPayload paymentPayload)
 			throws InvalidTransactionException, InternalError, IOException {
 		log.info("Inside createPayment()");
-		Payment payment = paymentPayload.getPayment();		
-		loanValidator.validate(paymentPayload.getPayment()); // validate data.
+		Payment payment = paymentPayload.getPayment();
+		paymentValidator.validate(payment); // validate data.
 
-		String address = loanAddressBuilder.buildAddress(payment); // build address.
-		
-		loanDao.putLedgerEntry(state, address, payment); // persist data.
+		String address = paymentAddressBuilder.buildAddress(payment); // build address.
+
+		paymentDao.putLedgerEntry(state, address, payment); // persist data.
 		log.info("Payment made with payment id " + payment.getId());
 	}
-	
+
 	@Override
 	public IAddressBuilder<SawtoothWalletPayload> getAddressBuilder() {
 		return null;
