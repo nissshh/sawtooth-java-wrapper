@@ -21,6 +21,8 @@ import com.mycompany.blockchain.sawtooth.wallet.protobuf.SawtoothWalletPayload.P
 import com.mycompany.blockchain.sawtooth.wallet.protobuf.SawtoothWalletPayload.Withdraw;
 import com.mycompany.blockchain.sawtooth.wallet.protobuf.Wallet;
 
+import sawtooth.sdk.protobuf.ClientBatchSubmitResponse.Status;
+
 public class WalletPayloadClientTest extends BaseClientTest {
 
 	Logger logger = Logger.getLogger(WalletPayloadClientTest.class.getName());
@@ -45,7 +47,7 @@ public class WalletPayloadClientTest extends BaseClientTest {
 				.setCreateWallet(createWallet).build();
 
 		logger.info("Sending Payload as " + payload);
-		String resposne = service.submitStateChange(payload);
+		Status resposne = service.submitStateChange(payload);
 		logger.info("State Change responsed from client Service : " + resposne);
 		Wallet wallet = Wallet.getDefaultInstance().newBuilder().setCustomerId(customerId).build();
 		String address = new WalletAddressBuilder("wallet", "1.0").buildAddress(wallet);
@@ -67,7 +69,7 @@ public class WalletPayloadClientTest extends BaseClientTest {
 				.setPayloadType(PayloadType.DEPOSIT).setDeposit(depositWallet).build();
 
 		logger.info("Sending Payload as " + payload);
-		String resposne = service.submitStateChange(payload);
+		Status resposne = service.submitStateChange(payload);
 		logger.info("State Change responsed from client Service : " + resposne);
 		Wallet wallet = Wallet.getDefaultInstance().newBuilder().setCustomerId(customerId).build();
 		String address = new WalletAddressBuilder("wallet", "1.0").buildAddress(wallet);
@@ -89,7 +91,7 @@ public class WalletPayloadClientTest extends BaseClientTest {
 				.setPayloadType(PayloadType.WITHDRAW).setWithdraw(withdrawWallet).build();
 
 		logger.info("Sending Payload as " + payload);
-		String resposne = service.submitStateChange(payload);
+		Status resposne = service.submitStateChange(payload);
 		logger.info("State Change responsed from client Service : " + resposne);
 		Wallet wallet = Wallet.getDefaultInstance().newBuilder().setCustomerId(customerId).build();
 		String address = new WalletAddressBuilder("wallet", "1.0").buildAddress(wallet);
@@ -118,7 +120,7 @@ public class WalletPayloadClientTest extends BaseClientTest {
 		payloads.add(payloadCredit);
 
 		logger.info("Sending Payload as " + payloads);
-		String resposne = service.submitStateChangeMutiplePayloads(payloads);
+		Status resposne = service.submitStateChangeMutipleTransactions(payloads);
 
 		logger.info("State Change responsed from client Service : " + resposne);
 		Wallet wallet = Wallet.getDefaultInstance().newBuilder().setCustomerId("1259").build();
