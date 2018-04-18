@@ -67,6 +67,9 @@ message LoanRequestPayload {
 	    
 	    //Loan amount which borrower has requested for
 	    uint32 requested_amt = 6;    
+	    
+	    //Loan Status. Can be - Requested/Approved/Active/Closed
+	    LoanStatus status = 7;
     }
 
     message ApproveLoanRequest {

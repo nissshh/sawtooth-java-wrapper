@@ -3,7 +3,6 @@ package com.mycompany.blockchain.sawtooth.app.controller;
 import java.io.UnsupportedEncodingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.googlecode.protobuf.format.JsonFormat;
@@ -22,7 +20,6 @@ import com.mycompany.blockchain.sawtooth.mortgage.asset.protobuf.AssetPayload;
 import com.mycompany.blockchain.sawtooth.mortgage.asset.protobuf.AssetPayload.PayloadType;
 import com.mycompany.blockchain.sawtooth.mortgage.asset.protobuf.CreateAsset;
 
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import sawtooth.sdk.processor.exceptions.ValidatorConnectionError;
 import sawtooth.sdk.protobuf.ClientBatchSubmitResponse.Status;

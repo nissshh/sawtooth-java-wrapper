@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.mycompany.blockchain.sawtooth.client.wallet.WalletPayloadClientService;
 import com.mycompany.blockchain.sawtooth.wallet.protobuf.SawtoothWalletPayload;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import sawtooth.sdk.protobuf.ClientBatchSubmitResponse.Status;
 
 @Slf4j
+@Service
 public class WalletService {
 
 	@Autowired
