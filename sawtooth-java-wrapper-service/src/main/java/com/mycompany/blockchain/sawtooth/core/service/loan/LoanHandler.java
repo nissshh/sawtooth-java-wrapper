@@ -239,6 +239,7 @@ public class LoanHandler implements ITransactionHandler<String, LoanRequestPaylo
 		return Loan.newBuilder().setAssetId(loan.getAssetId()).setBorrowerId(loan.getBorrowerId())
 				.setLenderId(loan.getLenderId()).setRequestedAmt(loan.getRequestedAmt())
 				.setApprovedAmt(approveLoanRequest.getApprovedAmt())
+				.setBalance(approveLoanRequest.getApprovedAmt())
 				.setRoi(approveLoanRequest.getRoi()).setStatus(approveLoanRequest.getStatus())
 				.build();
 	}
@@ -255,9 +256,12 @@ public class LoanHandler implements ITransactionHandler<String, LoanRequestPaylo
 		List<Payment> paymentsList = new ArrayList<Payment>();
 		existingLoan.getPaymentsList().forEach(p -> paymentsList.add(p));
 		paymentsList.add(payment);
+		
+		int interest = (int)(((existingLoan.getApprovedAmt() * existingLoan.getRoi()) / 100) / 12);
+		int balance = existingLoan.getBalance() - interest;
 		return Loan.newBuilder().setAssetId(existingLoan.getAssetId()).setBorrowerId(existingLoan.getBorrowerId())
 				.setLenderId(existingLoan.getLenderId()).setRequestedAmt(existingLoan.getRequestedAmt())
-				.setApprovedAmt(existingLoan.getApprovedAmt()).setId(existingLoan.getId()).setBalance(existingLoan.getBalance())
+				.setApprovedAmt(existingLoan.getApprovedAmt()).setId(existingLoan.getId()).setBalance(balance)
 				.setRoi(existingLoan.getRoi()).setStatus(existingLoan.getStatus()).addAllPayments(paymentsList)
 				.build();
 	}
