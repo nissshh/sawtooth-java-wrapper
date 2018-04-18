@@ -10,20 +10,22 @@ import org.junit.Test;
 import com.mycompany.blockchain.sawtooth.client.BaseClientTest;
 import com.mycompany.blockchain.sawtooth.client.ClientService;
 
+import lombok.extern.java.Log;
+import sawtooth.sdk.protobuf.ClientBatchSubmitResponse.Status;
+
 /**
  * @author Nishant Sonar<nishant_sonar@yahoo.com>
  *
  */
+@Log
 public class IntKeyClientTest extends BaseClientTest{
-	
-	private static Logger logger = Logger.getLogger(IntKeyClientTest.class.getName());
 	
 	@Test
 	public void test() throws Exception {
 		String payload = new String("inc sonar 10");
-		System.out.println("Sending Payload as "+payload);
-		String resposne = service.submitStateChange(payload);
-		logger.info("Response from client Service : "+resposne);
+		log.info("Sending Payload as "+payload);
+		Status resposne = service.submitStateChange(payload);
+		log.info("Response from client Service : "+resposne);
 	}
 
 	@Override
