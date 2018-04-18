@@ -1,9 +1,11 @@
 /**
  * 
  */
-package com.mycompany.blockchain.sawtooth.client;
+package com.mycompany.blockchain.sawtooth.client.intkey;
 
 import java.io.ByteArrayOutputStream;
+
+import com.mycompany.blockchain.sawtooth.client.GenericTransactionBuilder;
 
 import co.nstant.in.cbor.CborBuilder;
 import co.nstant.in.cbor.CborEncoder;

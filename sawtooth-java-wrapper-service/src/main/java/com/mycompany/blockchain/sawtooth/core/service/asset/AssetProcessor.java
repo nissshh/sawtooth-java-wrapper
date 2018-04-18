@@ -11,7 +11,7 @@ public class AssetProcessor {
 	public static void main(String[] args) {
 
 		TransactionProcessor transactionProcessor = new TransactionProcessor(args[0]);
-		transactionProcessor.addHandler(new AssetHandler());
+		transactionProcessor.addHandler(new AssetPayloadHandler());
 		Thread thread = new Thread(transactionProcessor);
 		thread.start();
 	}

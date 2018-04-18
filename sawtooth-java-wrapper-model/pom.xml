@@ -5,7 +5,7 @@
 	<artifactId>sawtooth-java-wrapper-model</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Sawtooth Framework Modals</name>
-	<description>Base and common modal classes for framerowk specifically for sawtooth</description>
+	<description>Base and common modal classes for framerowk specifically for sawtooth, ususally will contain all the protos.</description>
 	<parent>
 		<groupId>com.mycompany.blockchain.sawtooth.jwrap</groupId>
 		<artifactId>sawtooth-java-wrapper-parent</artifactId>

@@ -12,7 +12,7 @@ import sawtooth.sdk.processor.exceptions.InvalidTransactionException;
 
 /**
  * 
- * Provides methods to get address data for a given entity key
+ * Provides methods to get address data for a given entity key and interacts with the state
  * 
  * Not: Key definition is client specific
  * 
