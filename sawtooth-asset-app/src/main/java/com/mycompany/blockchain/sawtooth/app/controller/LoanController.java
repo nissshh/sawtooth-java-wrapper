@@ -16,6 +16,7 @@ import com.googlecode.protobuf.format.JsonFormat;
 import com.mycompany.blockchain.sawtooth.app.service.LoanService;
 import com.mycompany.blockchain.sawtooth.app.vo.LoanVO;
 import com.mycompany.blockchain.sawtooth.client.loan.LoanPayloadClientService;
+import com.mycompany.blockchain.sawtooth.client.payment.PaymentPayloadClientService;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.Loan;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.ApproveLoanRequest;
@@ -42,6 +43,9 @@ public class LoanController {
 
 	@Autowired
 	LoanPayloadClientService loanPayloadService;
+	
+	@Autowired
+	PaymentPayloadClientService paymentService;
 
 	@Autowired
 	LoanService loanService;
@@ -55,6 +59,18 @@ public class LoanController {
 		String address = loanPayloadService.getiAddressBuilder().buildAddress(entity);
 		ByteString result = loanPayloadService.getTemplate().getClientGetStateRequest(address);
 		String strin = JsonFormat.printToString(Loan.parseFrom(result));
+		log.info("JSON : ", strin);
+		return strin;
+	}
+	
+	@RequestMapping(consumes = "application/json", method = RequestMethod.GET, path = "/payment")
+	public @ResponseBody String getPayment(@RequestParam String paymentId)
+			throws InvalidProtocolBufferException, InterruptedException, ValidatorConnectionError,
+			UnsupportedEncodingException {
+		Payment payment = Payment.newBuilder().setId(paymentId).build();
+		String address = paymentService.getiAddressBuilder().buildAddress(payment);
+		ByteString result = paymentService.getTemplate().getClientGetStateRequest(address);
+		String strin = JsonFormat.printToString(Payment.parseFrom(result));
 		log.info("JSON : ", strin);
 		return strin;
 	}

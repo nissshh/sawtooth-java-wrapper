@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.mycompany.blockchain.sawtooth.client.GenericBatchBuilder;
+import com.mycompany.blockchain.sawtooth.client.Signer;
 import com.mycompany.blockchain.sawtooth.client.asset.AssetPayloadClientService;
 import com.mycompany.blockchain.sawtooth.client.loan.LoanPayloadClientService;
 import com.mycompany.blockchain.sawtooth.client.payment.PaymentPayloadClientService;
@@ -50,7 +52,7 @@ public class ApplicationConfig {
 	@Value("${payment.tx.family.version}")
 	private String paymentTxVersion;
 
-	// @Value("${asset.user.signerkey}")
+	@Value("${asset.user.signerkey}")
 	private String signerKey;
 
 	@Value("${network.zmq.adress}")
@@ -86,6 +88,18 @@ public class ApplicationConfig {
 				paymentTxFamily, paymentTxVersion, signerKey, address);
 		payloadClientService.init();
 		return payloadClientService;
+	}
+	
+	@Bean
+	public GenericBatchBuilder getBatchBuilder() {
+		GenericBatchBuilder batchBuilder = new GenericBatchBuilder();
+		batchBuilder.setSigner(getSigner());
+		return batchBuilder;
+	}
+	
+	@Bean
+	public Signer getSigner() {
+		return new Signer(signerKey);
 	}
 
 }

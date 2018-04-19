@@ -17,6 +17,5 @@ public class PaymentVO {
 
 	int amount;
 	String from;
-	String to;
-	String assetId;	
+	String to;	
 }
