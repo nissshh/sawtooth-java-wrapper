@@ -18,10 +18,9 @@ import com.mycompany.blockchain.sawtooth.loan.protobuf.Loan;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.ApproveLoanRequest;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.CreateLoanRequest;
-import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.LoanPaymentPayload;
+import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.LoanRePaymentPayload;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanStatus;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.Payment;
-import com.mycompany.blockchain.sawtooth.wallet.protobuf.SawtoothWalletPayload;
 
 import sawtooth.sdk.processor.State;
 import sawtooth.sdk.processor.exceptions.InternalError;
@@ -88,8 +87,8 @@ public class LoanHandler implements ITransactionHandler<String, LoanRequestPaylo
 			case APPROVE_LOAN:
 				approveLoanRequest(transactionRequest, state, loanPayload.getApproveLoanRequest());
 				break;
-			case MONTHLY_PAYMENT:
-				mothlyPayment(transactionRequest, state, loanPayload.getMonthlyPayment());
+			case REPAYMENT:
+				mothlyPayment(transactionRequest, state, loanPayload.getLoanRepayment());
 				break;
 
 			default:
@@ -162,7 +161,7 @@ public class LoanHandler implements ITransactionHandler<String, LoanRequestPaylo
 	}
 
 	/**
-	 * Handles Action - Monthly Payments against Loan
+	 * Handles Action - Monthly Re Payments against Loan
 	 * 
 	 * @param transactionRequest
 	 * @param state
@@ -172,12 +171,12 @@ public class LoanHandler implements ITransactionHandler<String, LoanRequestPaylo
 	 * @throws InternalError
 	 */
 	private void mothlyPayment(TpProcessRequest transactionRequest, State state,
-			LoanPaymentPayload monthlyPayment)
+			LoanRePaymentPayload rePayment)
 			throws InvalidTransactionException, InternalError, IOException {
 		log.info("Inside mothlyPayment()");
-		Loan loan = Loan.newBuilder().setBorrowerId(monthlyPayment.getPayment().getFrom())
-				.setLenderId(monthlyPayment.getPayment().getTo())
-				.setAssetId(monthlyPayment.getAssetId()).build();
+		Loan loan = Loan.newBuilder().setBorrowerId(rePayment.getPayment().getFrom())
+				.setLenderId(rePayment.getPayment().getTo())
+				.setAssetId(rePayment.getAssetId()).build();
 		loanValidator.validate(loan); // validate data.
 
 		String address = loanAddressBuilder.buildAddress(loan); // build address.
@@ -189,7 +188,7 @@ public class LoanHandler implements ITransactionHandler<String, LoanRequestPaylo
 					+ loan.getLenderId() + ". First create Loan Request.");
 		}
 		
-		Loan updatedLoan = updateMontlyPayment(transactionRequest, monthlyPayment.getPayment(), existingLoan);
+		Loan updatedLoan = updateMontlyPayment(transactionRequest, rePayment.getPayment(), existingLoan);
 		
 		loanDao.putLedgerEntry(state, address, updatedLoan); // persist data.
 		log.info("EMI for Loan paid. AsssetId:" + loan.getAssetId() + " LenderId:"
@@ -245,7 +244,7 @@ public class LoanHandler implements ITransactionHandler<String, LoanRequestPaylo
 	}
 	
 	/**
-	 * Update Monthly Payment in the Loan
+	 * Update Monthly Re Payment in the Loan
 	 * @param transactionRequest
 	 * @param payment
 	 * @param existingLoan

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.mycompany.blockchain.sawtooth.client.loan.LoanPayloadClientService;
 import com.mycompany.blockchain.sawtooth.client.payment.PaymentPayloadClientService;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload;
-import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.LoanPaymentPayload;
+import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.LoanRePaymentPayload;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.PayloadType;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.Payment;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.PaymentPayload;
@@ -39,7 +39,7 @@ public class LoanService {
 	
 	
 
-	public Status pay(LoanPaymentPayload loanPaymentPayload) throws Exception {
+	public Status pay(LoanRePaymentPayload loanPaymentPayload) throws Exception {
 		Random random = new Random();
 		String id = String.valueOf(random.nextInt(999999));
 		Payment payment = Payment.newBuilder()
@@ -62,8 +62,8 @@ public class LoanService {
 		walletService.transferWallet(transferPayment);
 		
 		//Loan TP
-		LoanRequestPayload loanRequestPayload = LoanRequestPayload.newBuilder().setPayloadType(PayloadType.MONTHLY_PAYMENT)
-				.setMonthlyPayment(loanPaymentPayload).build();
+		LoanRequestPayload loanRequestPayload = LoanRequestPayload.newBuilder().setPayloadType(PayloadType.REPAYMENT)
+				.setLoanRepayment(loanPaymentPayload).build();
 		log.info("Sending Loan Payment Payload as " + loanPaymentPayload);
 		response = service.submitStateChange(loanRequestPayload);
 		log.info("State Change responsed from client Service : " + response);

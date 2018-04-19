@@ -18,7 +18,7 @@ import com.mycompany.blockchain.sawtooth.loan.protobuf.Loan;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.ApproveLoanRequest;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.CreateLoanRequest;
-import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.LoanPaymentPayload;
+import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.LoanRePaymentPayload;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.PayloadType;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.Payment;
 
@@ -86,10 +86,10 @@ public class LoanPayloadClientTest extends BaseClientTest {
 		//logger.info("State Change responsed from client Service : " + resposne);
 
 		// Loan Transaction Processor
-		LoanPaymentPayload loanPaymentPayload = LoanPaymentPayload.newBuilder().setPayment(payment)
+		LoanRePaymentPayload loanPaymentPayload = LoanRePaymentPayload.newBuilder().setPayment(payment)
 				.setAssetId(assetId).build();
 		LoanRequestPayload payload = LoanRequestPayload.newBuilder()
-				.setMonthlyPayment(loanPaymentPayload).setPayloadType(PayloadType.MONTHLY_PAYMENT)
+				.setLoanRepayment(loanPaymentPayload).setPayloadType(PayloadType.REPAYMENT)
 				.build();
 		logger.info("Sending Loan Payment Payload as " + payload);
 		Status resposne = service.submitStateChange(payload);

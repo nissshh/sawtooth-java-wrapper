@@ -20,7 +20,7 @@ import com.mycompany.blockchain.sawtooth.loan.protobuf.Loan;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.ApproveLoanRequest;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.CreateLoanRequest;
-import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.LoanPaymentPayload;
+import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.LoanRePaymentPayload;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.PayloadType;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanStatus;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.Payment;
@@ -96,7 +96,7 @@ public class LoanController {
 				.setTo(loanVo.getPayment().getTo()).setAmount(loanVo.getPayment().getAmount())
 				.build();
 		
-		LoanPaymentPayload loanPaymentPayload = LoanPaymentPayload.newBuilder().setAssetId(loanVo.getAssetId()).setPayment(payment).build();
+		LoanRePaymentPayload loanPaymentPayload = LoanRePaymentPayload.newBuilder().setAssetId(loanVo.getAssetId()).setPayment(payment).build();
 				
 		Status response = loanService.pay(loanPaymentPayload);
 		if (!response.equals(Status.OK) && !response.equals(Status.STATUS_UNSET)) {

@@ -5,8 +5,7 @@ import com.mycompany.blockchain.sawtooth.loan.protobuf.Loan;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.ApproveLoanRequest;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.CreateLoanRequest;
-import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.LoanPaymentPayload;
-import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanStatus;
+import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.LoanRePaymentPayload;
 
 public class LoanTransactionBuilder extends GenericTransactionBuilder<Loan, LoanRequestPayload> {
 
@@ -31,8 +30,8 @@ public class LoanTransactionBuilder extends GenericTransactionBuilder<Loan, Loan
 					.setLenderId(approvedLoanRequest.getLenderId())
 					.setApprovedAmt(approvedLoanRequest.getApprovedAmt())
 					.setRoi(approvedLoanRequest.getRoi()).build();
-		} else if (payload.hasMonthlyPayment()) {
-			LoanPaymentPayload monthlyPayment = payload.getMonthlyPayment();
+		} else if (payload.hasLoanRepayment()) {
+			LoanRePaymentPayload monthlyPayment = payload.getLoanRepayment();
 			return Loan.newBuilder().setBorrowerId(monthlyPayment.getPayment().getFrom())
 					.setLenderId(monthlyPayment.getPayment().getTo())
 					.setAssetId(monthlyPayment.getAssetId()).build();
