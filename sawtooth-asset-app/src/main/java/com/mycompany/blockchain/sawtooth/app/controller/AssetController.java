@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JsonParserFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,11 +46,14 @@ public class AssetController {
 	
 	@RequestMapping(consumes="application/json",method=RequestMethod.GET,path="/asset")
 	public @ResponseBody String getAsset(@RequestParam String name) throws InvalidProtocolBufferException, InterruptedException, ValidatorConnectionError, UnsupportedEncodingException {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String currentPrincipalName = authentication.getName();
+		log.info("User: {} called the method",currentPrincipalName);
 		Asset entity = Asset.newBuilder().setName(name).build();
 		String address = assetPayloadService.getiAddressBuilder().buildAddress(entity);
 		ByteString result = assetPayloadService.getTemplate().getClientGetStateRequest(address);
 		String strin = JsonFormat.printToString(Asset.parseFrom(result));
-		log.info("JSON : ",strin);
+		log.info("JSON : {}",strin);
 		return strin;
 	}
 	
