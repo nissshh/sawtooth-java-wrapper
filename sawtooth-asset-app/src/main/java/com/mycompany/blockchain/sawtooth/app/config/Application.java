@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  */
 @SpringBootApplication
-@ComponentScan("com.mycompany.blockchain.sawtooth")
+@ComponentScan("com.mycompany.blockchain.sawtooth.app")
 @Slf4j
 public class Application {
 	public static void main(String[] args) {

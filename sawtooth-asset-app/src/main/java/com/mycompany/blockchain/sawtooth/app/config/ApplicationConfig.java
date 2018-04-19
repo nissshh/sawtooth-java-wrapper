@@ -39,7 +39,16 @@ public class ApplicationConfig {
 	private String paymentTxFamily;
 
 	@Value("${asset.tx.family.version}")
-	private String txVersion;
+	private String assetTxVersion;
+
+	@Value("${loan.tx.family.version}")
+	private String loanTxVersion;
+
+	@Value("${wallet.tx.family.version}")
+	private String walletTxVersion;
+
+	@Value("${payment.tx.family.version}")
+	private String paymentTxVersion;
 
 	// @Value("${asset.user.signerkey}")
 	private String signerKey;
@@ -50,7 +59,7 @@ public class ApplicationConfig {
 	@Bean
 	public AssetPayloadClientService getAssetService() throws Exception {
 		AssetPayloadClientService assetPayloadClientService = new AssetPayloadClientService(
-				assetTxFamily, txVersion, signerKey, address);
+				assetTxFamily, assetTxVersion, signerKey, address);
 		assetPayloadClientService.init();
 		return assetPayloadClientService;
 	}
@@ -58,7 +67,7 @@ public class ApplicationConfig {
 	@Bean
 	public LoanPayloadClientService getLoanPayloadSerice() throws Exception {
 		LoanPayloadClientService loanPayloadClientService = new LoanPayloadClientService(
-				loanTxFamily, txVersion, signerKey, address);
+				loanTxFamily, loanTxVersion, signerKey, address);
 		loanPayloadClientService.init();
 		return loanPayloadClientService;
 	}
@@ -66,7 +75,7 @@ public class ApplicationConfig {
 	@Bean
 	public WalletPayloadClientService getWalletPayloadService() throws Exception {
 		WalletPayloadClientService walletPayloadClientService = new WalletPayloadClientService(
-				walletTxFamily, txVersion, signerKey, address);
+				walletTxFamily, walletTxVersion, signerKey, address);
 		walletPayloadClientService.init();
 		return walletPayloadClientService;
 	}
@@ -74,7 +83,7 @@ public class ApplicationConfig {
 	@Bean
 	public PaymentPayloadClientService getPaymentPayloadService() throws Exception {
 		PaymentPayloadClientService payloadClientService = new PaymentPayloadClientService(
-				paymentTxFamily, txVersion, signerKey, address);
+				paymentTxFamily, paymentTxVersion, signerKey, address);
 		payloadClientService.init();
 		return payloadClientService;
 	}

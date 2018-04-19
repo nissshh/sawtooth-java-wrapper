@@ -93,7 +93,7 @@ message LoanRequestPayload {
 	    uint32 approved_amt = 7;
     }  
     
-     message LoanPaymentPayload {
+     message LoanRePaymentPayload {
      	//Asset id against which the payment will be done
      	string asset_id = 1;
      	
@@ -104,13 +104,13 @@ message LoanRequestPayload {
     enum PayloadType {        
         CREATE_LOAN = 0;
         APPROVE_LOAN = 1;  
-        MONTHLY_PAYMENT = 2;      
+        REPAYMENT = 2;      
     }
     
     PayloadType payload_type = 1;
     CreateLoanRequest create_loan_request = 2;
     ApproveLoanRequest approve_loan_request = 3;    
-    LoanPaymentPayload monthly_payment = 4;
+    LoanRePaymentPayload loan_repayment = 4;
 }
 
 message Payment {

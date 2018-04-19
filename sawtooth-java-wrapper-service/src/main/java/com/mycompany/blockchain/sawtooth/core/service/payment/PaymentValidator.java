@@ -22,7 +22,7 @@ public class PaymentValidator implements IDataValidator<Payment> {
 	@Override
 	public boolean validate(Payment data) throws InvalidTransactionException {
 		if (data.getId() == null || data.getId().isEmpty())
-			return false;
+			throw new InvalidTransactionException("Payment Id cannot be empty or null.");
 		return true;
 	}
 
