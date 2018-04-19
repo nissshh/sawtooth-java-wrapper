@@ -121,6 +121,16 @@ public class WalletPayloadClientTest extends BaseClientTest {
 
 		logger.info("Sending Payload as " + payloads);
 		Status resposne = service.submitStateChangeMutipleTransactions(payloads);
+		
+		logger.info("State Change responsed from client Service : " + resposne);
+		Wallet wallet = Wallet.getDefaultInstance().newBuilder().setCustomerId("1259").build();
+		String address = new WalletAddressBuilder("wallet", "1.0").buildAddress(wallet);
+		System.out.println("Getting data for at address   :    " + address);
+		ByteString response = zmqTemplate.getClientGetStateRequest(address);
+		Wallet walletAtAddress = Wallet.parseFrom(response);
+		System.out.println("Asset found as " + walletAtAddress);
+		// Assert.assertEquals(customerId, walletAtAddress.getCustomerId());
+
 	}
 
 }

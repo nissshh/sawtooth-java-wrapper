@@ -33,7 +33,7 @@ public abstract class GenericTransactionBuilder<ENTITY,PAYLOAD>{
 	 * @return
 	 * @throws Exception 
 	 */
-	TransactionHeaderDTO buildTransaction(PAYLOAD payload) throws Exception {
+	public TransactionHeaderDTO buildTransaction(PAYLOAD payload) throws Exception {
 
 		String payloadBytes = Utils.hash512(getEncodedPayload(payload)); 
         ByteString payloadByteString  = ByteString.copyFrom(getEncodedPayload(payload));
