@@ -99,7 +99,7 @@ public class LoanController {
 		LoanRequestPayload payload = LoanRequestPayload.newBuilder()
 				.setPayloadType(PayloadType.APPROVE_LOAN).setApproveLoanRequest(approveWallet)
 				.build();
-		Status response = loanPayloadService.submitStateChange(payload);
+		Status response = loanService.approveLoan(payload);
 		if (!response.equals(Status.OK) && !response.equals(Status.STATUS_UNSET)) {
 			log.warn("Response for submission is : " + response.getNumber());
 		}

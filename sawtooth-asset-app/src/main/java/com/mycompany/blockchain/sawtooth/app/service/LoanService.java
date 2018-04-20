@@ -53,8 +53,11 @@ public class LoanService {
 	@Autowired
 	private GenericBatchBuilder batchBuilder;
 
-	/*
-	 * @Autowired private WalletService walletService;
+	/**
+	 * Method to repay against the loan
+	 * @param loanPaymentPayload
+	 * @return
+	 * @throws Exception
 	 */
 
 	public Status pay(LoanRePaymentPayload loanPaymentPayload) throws Exception {
@@ -68,7 +71,7 @@ public class LoanService {
 		// Payment TP
 		PaymentPayload paymentPayload = PaymentPayload.newBuilder()
 				.setPaylodType(PaymentPayloadType.PAY).setPayment(payment).build();		
-		TransactionHeaderDTO paymentDTO = getPaymentTransaction(paymentPayload);
+		TransactionHeaderDTO paymentPayloadDTO = getPaymentTransaction(paymentPayload);
 		log.info("Sending Payment Payload as " + paymentPayload);
 
 		// Wallet TP		
@@ -78,8 +81,8 @@ public class LoanService {
 		SawtoothWalletPayload payloadDebit = SawtoothWalletPayload.newBuilder().setPayloadType(
 				com.mycompany.blockchain.sawtooth.wallet.protobuf.SawtoothWalletPayload.PayloadType.WITHDRAW)
 				.setWithdraw(withdrawWallet).build();
-		TransactionHeaderDTO walletDebitPayload = getWalletTransaction(payloadDebit);
-		log.info("Sending Wallet Debit Payload as " + walletDebitPayload);
+		TransactionHeaderDTO walletDebitPayloadDTO = getWalletTransaction(payloadDebit);
+		log.info("Sending Wallet Debit Payload as " + payloadDebit);
 		
 		Deposit depositWallet = Deposit.newBuilder()
 				.setCustomerId(payment.getTo())
@@ -87,20 +90,20 @@ public class LoanService {
 		SawtoothWalletPayload payloadCredit = SawtoothWalletPayload.newBuilder().setPayloadType(
 				com.mycompany.blockchain.sawtooth.wallet.protobuf.SawtoothWalletPayload.PayloadType.DEPOSIT)
 				.setDeposit(depositWallet).build();
-		TransactionHeaderDTO walletCrebitPayload = getWalletTransaction(payloadCredit);
-		log.info("Sending Wallet Crebit Payload as " + walletCrebitPayload);
+		TransactionHeaderDTO walletCrebitPayloadDTO = getWalletTransaction(payloadCredit);
+		log.info("Sending Wallet Crebit Payload as " + payloadCredit);
 		
 		// Loan TP
 		LoanRequestPayload loanRequestPayload = LoanRequestPayload.newBuilder()
 				.setPayloadType(PayloadType.REPAYMENT).setLoanRepayment(loanPaymentPayload).build();
-		TransactionHeaderDTO loanRepaymentPayload = getLoanTransaction(loanRequestPayload);
+		TransactionHeaderDTO loanRepaymentPayloadDTO = getLoanTransaction(loanRequestPayload);
 		log.info("Sending Loan Re-Payment Payload as " + loanPaymentPayload);
 		
 		List<TransactionHeaderDTO> transactionDTOs = new ArrayList<>();
-		transactionDTOs.add(paymentDTO);
-		transactionDTOs.add(walletDebitPayload);
-		transactionDTOs.add(walletCrebitPayload);
-		transactionDTOs.add(loanRepaymentPayload);
+		transactionDTOs.add(paymentPayloadDTO);
+		transactionDTOs.add(walletDebitPayloadDTO);
+		transactionDTOs.add(walletCrebitPayloadDTO);
+		transactionDTOs.add(loanRepaymentPayloadDTO);
 		
 		BatchList batch = batchBuilder.buildBatch(transactionDTOs);
 		ByteString batchBytes = batch.toByteString();
@@ -108,6 +111,62 @@ public class LoanService {
 		log.info("Response for submission is : " + response.getNumber());
 		return response;
 		
+	}
+	
+	/**
+	 * Approve Loan Request. After Approval of Loan, the payment is made from Lender to Borrower
+	 * @param loanPayload
+	 * @return
+	 * @throws Exception
+	 */
+	public Status approveLoan(LoanRequestPayload loanPayload) throws Exception {
+		Random random = new Random();
+		String id = String.valueOf(random.nextInt(999999));
+		Payment payment = Payment.newBuilder().setId(id)
+				.setAmount(loanPayload.getApproveLoanRequest().getApprovedAmt())
+				.setFrom(loanPayload.getApproveLoanRequest().getLenderId())
+				.setTo(loanPayload.getApproveLoanRequest().getBorrowerId()).build();
+		
+		// Payment TP
+		PaymentPayload paymentPayload = PaymentPayload.newBuilder()
+				.setPaylodType(PaymentPayloadType.PAY).setPayment(payment).build();
+		TransactionHeaderDTO paymentPayloadDTO = getPaymentTransaction(paymentPayload);
+		log.info("Sending Payment Payload as " + paymentPayload);
+
+		// Wallet TP
+		Withdraw withdrawWallet = Withdraw.newBuilder().setCustomerId(payment.getFrom())
+				.setAmount(payment.getAmount()).build();
+		SawtoothWalletPayload payloadDebit = SawtoothWalletPayload.newBuilder().setPayloadType(
+				com.mycompany.blockchain.sawtooth.wallet.protobuf.SawtoothWalletPayload.PayloadType.WITHDRAW)
+				.setWithdraw(withdrawWallet).build();
+		TransactionHeaderDTO walletDebitPayloadDTO = getWalletTransaction(payloadDebit);
+		log.info("Sending Wallet Debit Payload as " + walletDebitPayloadDTO);
+
+		Deposit depositWallet = Deposit.newBuilder().setCustomerId(payment.getTo())
+				.setAmount(payment.getAmount()).build();
+		SawtoothWalletPayload payloadCredit = SawtoothWalletPayload.newBuilder().setPayloadType(
+				com.mycompany.blockchain.sawtooth.wallet.protobuf.SawtoothWalletPayload.PayloadType.DEPOSIT)
+				.setDeposit(depositWallet).build();
+		TransactionHeaderDTO walletCrebitPayloadDTO = getWalletTransaction(payloadCredit);
+		log.info("Sending Wallet Crebit Payload as " + payloadCredit);
+
+		// Loan TP
+		LoanRequestPayload loanApprovalPayload = LoanRequestPayload.newBuilder()
+				.setPayloadType(PayloadType.APPROVE_LOAN).setApproveLoanRequest(loanPayload.getApproveLoanRequest()).build();
+		TransactionHeaderDTO loanApprovalDTO = getLoanTransaction(loanApprovalPayload);
+		log.info("Sending Loan Approval Payload as " + loanApprovalPayload);
+
+		List<TransactionHeaderDTO> transactionDTOs = new ArrayList<>();
+		transactionDTOs.add(paymentPayloadDTO);
+		transactionDTOs.add(walletDebitPayloadDTO);
+		transactionDTOs.add(walletCrebitPayloadDTO);
+		transactionDTOs.add(loanApprovalDTO);
+
+		BatchList batch = batchBuilder.buildBatch(transactionDTOs);
+		ByteString batchBytes = batch.toByteString();
+		Status response = loanService.getTemplate().submitBatch(batchBytes);
+		log.info("Response for submission is : " + response.getNumber());
+		return response;
 	}
 
 	public TransactionHeaderDTO getLoanTransaction(LoanRequestPayload loanRequestPayload)
