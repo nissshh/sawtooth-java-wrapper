@@ -1,7 +1,9 @@
 /**
  * 
  */
-package com.mycompany.blockchain.sawtooth.app.vo;
+package com.mycompany.blockchain.sawtooth.app.vo.loan;
+
+import com.mycompany.blockchain.sawtooth.app.vo.PaymentVO;
 
 import lombok.Data;
 
@@ -14,12 +16,10 @@ import lombok.Data;
  */
 @Data
 public class LoanVO {
-
-	int balance;
 	String lenderId;
 	String borrowerId;
 	String assetId;
-	float roi;	
+	float roi;
 	int approvedAmount;
 	int requestedAmount;
 	PaymentVO payment;

@@ -14,7 +14,9 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.googlecode.protobuf.format.JsonFormat;
 import com.mycompany.blockchain.sawtooth.app.service.LoanService;
-import com.mycompany.blockchain.sawtooth.app.vo.LoanVO;
+import com.mycompany.blockchain.sawtooth.app.vo.loan.ApproveLoanVO;
+import com.mycompany.blockchain.sawtooth.app.vo.loan.CreateLoanVO;
+import com.mycompany.blockchain.sawtooth.app.vo.loan.LoanPaymentVO;
 import com.mycompany.blockchain.sawtooth.client.loan.LoanPayloadClientService;
 import com.mycompany.blockchain.sawtooth.client.payment.PaymentPayloadClientService;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.Loan;
@@ -76,7 +78,7 @@ public class LoanController {
 	}
 
 	@RequestMapping(consumes = "application/json", method = RequestMethod.POST, path = "/loan/create")
-	public @ResponseBody int createLoanRequest(@RequestBody LoanVO loanVo) throws Exception {
+	public @ResponseBody int createLoanRequest(@RequestBody CreateLoanVO loanVo) throws Exception {
 		CreateLoanRequest creteWallet = CreateLoanRequest.newBuilder()
 				.setAssetId(loanVo.getAssetId()).setBorrowerId(loanVo.getBorrowerId())
 				.setLenderId(loanVo.getLenderId()).setRoi(loanVo.getRoi())
@@ -91,7 +93,7 @@ public class LoanController {
 	}
 
 	@RequestMapping(consumes = "application/json", method = RequestMethod.POST, path = "/loan/approve")
-	public @ResponseBody int approveLoanRequest(@RequestBody LoanVO loanVo) throws Exception {
+	public @ResponseBody int approveLoanRequest(@RequestBody ApproveLoanVO loanVo) throws Exception {
 		ApproveLoanRequest approveWallet = ApproveLoanRequest.newBuilder()
 				.setAssetId(loanVo.getAssetId()).setBorrowerId(loanVo.getBorrowerId())
 				.setLenderId(loanVo.getLenderId()).setRoi(loanVo.getRoi())
@@ -107,7 +109,7 @@ public class LoanController {
 	}
 
 	@RequestMapping(consumes = "application/json", method = RequestMethod.POST, path = "/loan/payment")
-	public @ResponseBody int loanPayment(@RequestBody LoanVO loanVo) throws Exception {
+	public @ResponseBody int loanPayment(@RequestBody LoanPaymentVO loanVo) throws Exception {
 		Payment payment = Payment.newBuilder().setFrom(loanVo.getPayment().getFrom())
 				.setTo(loanVo.getPayment().getTo()).setAmount(loanVo.getPayment().getAmount())
 				.build();

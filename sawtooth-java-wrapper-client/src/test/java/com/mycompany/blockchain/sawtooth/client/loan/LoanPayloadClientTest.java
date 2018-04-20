@@ -115,7 +115,7 @@ public class LoanPayloadClientTest extends BaseClientTest {
 	
 	@Test
 	public void testReadListData() throws UnsupportedEncodingException, InvalidProtocolBufferException,
-			InterruptedException, ValidatorConnectionError, UnirestException {
+			InterruptedException, ValidatorConnectionError {
 		Loan loan = Loan.getDefaultInstance().newBuilder().setAssetId(assetId)
 				.setBorrowerId(borrowerId).setLenderId(lenderId).build();
 		String address = new LoanAddressBuilder("loan", "1.0").buildAddress(loan);
