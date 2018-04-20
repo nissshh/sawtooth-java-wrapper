@@ -39,7 +39,7 @@ public class AssetController {
 	@Autowired
 	AssetPayloadClientService assetPayloadService;
 	
-	@RequestMapping(consumes="application/json",method=RequestMethod.GET,path="/asset")
+	@RequestMapping(method=RequestMethod.GET,path="/asset")
 	public @ResponseBody String getAsset(@RequestParam String name) throws InvalidProtocolBufferException, InterruptedException, ValidatorConnectionError, UnsupportedEncodingException {
 		Asset entity = Asset.newBuilder().setName(name).build();
 		String address = assetPayloadService.getiAddressBuilder().buildAddress(entity);

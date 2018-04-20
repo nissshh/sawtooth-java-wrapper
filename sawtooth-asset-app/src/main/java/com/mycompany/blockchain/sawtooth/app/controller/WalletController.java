@@ -50,7 +50,7 @@ public class WalletController {
 	@Autowired
 	WalletService walletService;
 
-	@RequestMapping(consumes = "application/json", method = RequestMethod.GET, path = "/wallet")
+	@RequestMapping(method = RequestMethod.GET, path = "/wallet")
 	public @ResponseBody String getWallet(@RequestParam String customerId)
 			throws InvalidProtocolBufferException, InterruptedException, ValidatorConnectionError,
 			UnsupportedEncodingException {

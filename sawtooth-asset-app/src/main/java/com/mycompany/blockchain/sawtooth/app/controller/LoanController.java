@@ -50,7 +50,7 @@ public class LoanController {
 	@Autowired
 	LoanService loanService;
 
-	@RequestMapping(consumes = "application/json", method = RequestMethod.GET, path = "/loan")
+	@RequestMapping(method = RequestMethod.GET, path = "/loan")
 	public @ResponseBody String getLoan(@RequestParam String assetId, String lenderId, String borrowerId)
 			throws InvalidProtocolBufferException, InterruptedException, ValidatorConnectionError,
 			UnsupportedEncodingException {
@@ -63,7 +63,7 @@ public class LoanController {
 		return strin;
 	}
 	
-	@RequestMapping(consumes = "application/json", method = RequestMethod.GET, path = "/payment")
+	@RequestMapping(method = RequestMethod.GET, path = "/payment")
 	public @ResponseBody String getPayment(@RequestParam String paymentId)
 			throws InvalidProtocolBufferException, InterruptedException, ValidatorConnectionError,
 			UnsupportedEncodingException {

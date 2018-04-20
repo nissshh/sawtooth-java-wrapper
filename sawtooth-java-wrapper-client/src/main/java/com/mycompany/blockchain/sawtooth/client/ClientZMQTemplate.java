@@ -3,6 +3,8 @@
  */
 package com.mycompany.blockchain.sawtooth.client;
 
+import java.util.List;
+
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -15,6 +17,9 @@ import sawtooth.sdk.protobuf.ClientBatchSubmitResponse;
 import sawtooth.sdk.protobuf.ClientBatchSubmitResponse.Status;
 import sawtooth.sdk.protobuf.ClientStateGetRequest;
 import sawtooth.sdk.protobuf.ClientStateGetResponse;
+import sawtooth.sdk.protobuf.ClientStateListRequest;
+import sawtooth.sdk.protobuf.ClientStateListResponse;
+import sawtooth.sdk.protobuf.ClientStateListResponse.Entry;
 import sawtooth.sdk.protobuf.Message;
 
 /**
@@ -82,6 +87,17 @@ public class ClientZMQTemplate {
 		Future responseFuture = this.stream.send(Message.MessageType.CLIENT_BATCH_SUBMIT_REQUEST,request.toByteString());
 		ClientBatchSubmitResponse response = ClientBatchSubmitResponse.parseFrom(responseFuture.getResult());
 		return response.getStatus();
+	}
+
+	public List<Entry> getClientListStateRequest(String substring) throws InvalidProtocolBufferException, InterruptedException, ValidatorConnectionError {
+		ClientStateListRequest getRequest = ClientStateListRequest.getDefaultInstance().newBuilder().setAddress(substring)
+				.build();
+		Future responseFuture = this.stream.send(Message.MessageType.CLIENT_STATE_LIST_REQUEST,
+				getRequest.toByteString());
+		ClientStateListResponse getResponse = ClientStateListResponse .getDefaultInstance()
+				.parseFrom(responseFuture.getResult());
+		return getResponse.getEntriesList();
+		
 	}
 	
 }

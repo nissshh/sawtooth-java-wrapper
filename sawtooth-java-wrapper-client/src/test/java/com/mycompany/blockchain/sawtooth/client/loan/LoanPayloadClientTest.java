@@ -4,6 +4,8 @@
 package com.mycompany.blockchain.sawtooth.client.loan;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.junit.Assert;
@@ -24,12 +26,13 @@ import com.mycompany.blockchain.sawtooth.loan.protobuf.Payment;
 
 import sawtooth.sdk.processor.exceptions.ValidatorConnectionError;
 import sawtooth.sdk.protobuf.ClientBatchSubmitResponse.Status;
+import sawtooth.sdk.protobuf.ClientStateListResponse.Entry;
 
 public class LoanPayloadClientTest extends BaseClientTest {
 
 	Logger logger = Logger.getLogger(LoanPayloadClientTest.class.getName());
 
-	String assetId = "A001", borrowerId = "B001", lenderId = "L001";
+	String assetId = "A001", borrowerId = "BRW001", lenderId = "LND001";
 
 	@Override
 	protected ClientService getClientService() {
@@ -107,6 +110,28 @@ public class LoanPayloadClientTest extends BaseClientTest {
 		Loan loanAtAddress = Loan.parseFrom(response);
 		System.out.println("Loan found as " + loanAtAddress);
 		Assert.assertEquals(assetId, loanAtAddress.getAssetId());
+	}
+
+	
+	@Test
+	public void testReadListData() throws UnsupportedEncodingException, InvalidProtocolBufferException,
+			InterruptedException, ValidatorConnectionError, UnirestException {
+		Loan loan = Loan.getDefaultInstance().newBuilder().setAssetId(assetId)
+				.setBorrowerId(borrowerId).setLenderId(lenderId).build();
+		String address = new LoanAddressBuilder("loan", "1.0").buildAddress(loan);
+				
+		List<Entry> responses = zmqTemplate.getClientListStateRequest(address.substring(0,6));
+		List<Loan> allLoans = new ArrayList<>();
+		responses.forEach(entry -> {
+			try {
+				allLoans.add(Loan.parseFrom(entry.getData()));
+			} catch (InvalidProtocolBufferException e) {
+				System.out.println(e);
+			}
+		});
+						
+		System.out.println("\n\nLoans found as " + allLoans);
+		Assert.assertTrue(allLoans.size() > 0);
 	}
 
 }
