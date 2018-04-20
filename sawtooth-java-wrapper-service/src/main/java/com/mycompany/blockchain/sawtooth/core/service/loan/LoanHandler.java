@@ -257,7 +257,7 @@ public class LoanHandler implements ITransactionHandler<String, LoanRequestPaylo
 		paymentsList.add(payment);
 		
 		int interest = (int)(((existingLoan.getApprovedAmt() * existingLoan.getRoi())/100) / 12);
-		int balance = existingLoan.getBalance() - interest;
+		int balance = existingLoan.getBalance() - (payment.getAmount() - interest);
 		return Loan.newBuilder().setAssetId(existingLoan.getAssetId()).setBorrowerId(existingLoan.getBorrowerId())
 				.setLenderId(existingLoan.getLenderId()).setRequestedAmt(existingLoan.getRequestedAmt())
 				.setApprovedAmt(existingLoan.getApprovedAmt()).setId(existingLoan.getId()).setBalance(balance)
