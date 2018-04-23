@@ -7,9 +7,11 @@ import org.junit.Test;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 
+import lombok.extern.java.Log;
 import sawtooth.sdk.processor.exceptions.ValidatorConnectionError;
 import sawtooth.sdk.protobuf.Setting;
 
+@Log
 public class ClientZMQTemplateTest {
 
 	private ClientZMQTemplate template;
@@ -30,4 +32,5 @@ public class ClientZMQTemplateTest {
 		System.out.println(setting.getEntries(0).getKey());
 		System.out.println(setting.getEntries(0).getValue());
 	}
+	
 }

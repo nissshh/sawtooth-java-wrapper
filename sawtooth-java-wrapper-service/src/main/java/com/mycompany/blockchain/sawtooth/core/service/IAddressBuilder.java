@@ -28,7 +28,9 @@ public interface IAddressBuilder<ENTITY> {
 				+ Utils.hash512(getEntityKey(entity).getBytes()).substring(0, 64);
 	}
 
-	
+	default String getAddressPrefix() {
+		return Utils.hash512(getTransactionFamilyName().getBytes()).substring(0, 6);
+	}
 	/**
 	 * Provide the transaction family name as for prefix 
 	 * 

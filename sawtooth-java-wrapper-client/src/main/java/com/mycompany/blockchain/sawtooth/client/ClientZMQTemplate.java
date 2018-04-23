@@ -3,18 +3,26 @@
  */
 package com.mycompany.blockchain.sawtooth.client;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.mycompany.blockchain.sawtooth.client.asset.AssetEventProcessor;
+import com.mycompany.blockchain.sawtooth.core.service.IEventProcessor;
 
+import lombok.Getter;
+import lombok.extern.java.Log;
 import sawtooth.sdk.messaging.Future;
 import sawtooth.sdk.messaging.Stream;
 import sawtooth.sdk.processor.exceptions.ValidatorConnectionError;
 import sawtooth.sdk.protobuf.ClientBatchSubmitRequest;
 import sawtooth.sdk.protobuf.ClientBatchSubmitResponse;
 import sawtooth.sdk.protobuf.ClientBatchSubmitResponse.Status;
+import sawtooth.sdk.protobuf.ClientEventsSubscribeRequest;
+import sawtooth.sdk.protobuf.ClientEventsSubscribeResponse;
 import sawtooth.sdk.protobuf.ClientStateGetRequest;
 import sawtooth.sdk.protobuf.ClientStateGetResponse;
 import sawtooth.sdk.protobuf.ClientStateListRequest;
@@ -30,6 +38,8 @@ import sawtooth.sdk.protobuf.Message;
  * @author Nishant Sonar
  *
  */
+@Log
+@Getter
 public class ClientZMQTemplate {
 
 	private String zmqAddress = "tcp://localhost:4004";
@@ -100,4 +110,17 @@ public class ClientZMQTemplate {
 		
 	}
 	
+	/**
+	 * Issues a ClientEventsSubscribeRequest message on ZMQ.
+	 * @param clientEventsSubscribe
+	 * @return  response for subscription 
+	 * @throws ValidatorConnectionError 
+	 * @throws InterruptedException 
+	 * @throws InvalidProtocolBufferException 
+	 */
+	public ClientEventsSubscribeResponse subscribeClientEvent(ClientEventsSubscribeRequest clientEventsSubscribe) throws InvalidProtocolBufferException, InterruptedException, ValidatorConnectionError {
+		Future responseFuture = this.stream.send(Message.MessageType.CLIENT_EVENTS_SUBSCRIBE_REQUEST,clientEventsSubscribe.toByteString());
+		return ClientEventsSubscribeResponse.parseFrom(responseFuture.getResult());
+	}
+
 }
