@@ -11,7 +11,7 @@ import sawtooth.sdk.protobuf.BatchHeader;
 import sawtooth.sdk.protobuf.BatchList;
 import sawtooth.sdk.protobuf.Transaction;
 
-class GenericBatchBuilder {
+public class GenericBatchBuilder {
 	/**
 	 * The signer to signe batch and transactions
 	 */

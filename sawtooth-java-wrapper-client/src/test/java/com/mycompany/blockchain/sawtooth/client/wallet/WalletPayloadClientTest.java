@@ -121,7 +121,7 @@ public class WalletPayloadClientTest extends BaseClientTest {
 
 		logger.info("Sending Payload as " + payloads);
 		Status resposne = service.submitStateChangeMutipleTransactions(payloads);
-
+		
 		logger.info("State Change responsed from client Service : " + resposne);
 		Wallet wallet = Wallet.getDefaultInstance().newBuilder().setCustomerId("1259").build();
 		String address = new WalletAddressBuilder("wallet", "1.0").buildAddress(wallet);
