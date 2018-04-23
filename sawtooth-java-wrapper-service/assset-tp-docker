@@ -1,0 +1,8 @@
+FROM java:openjdk-8u91-jdk
+MAINTAINER nishant_sonar@yahoo.com
+EXPOSE 8080
+EXPOSE 1044
+CMD top_dir=$(cd $(dirname $(dirname $0)) && pwd)
+CMD echo $top_dir
+CMD cd $top_dir
+CMD java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=${DEBUG_PORT} -cp target/${JAR_NAME} ${TP_PROCESSOR} ${VALIDATOR_NETWORK_URL}

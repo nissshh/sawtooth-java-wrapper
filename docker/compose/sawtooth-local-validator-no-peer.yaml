@@ -1,0 +1,134 @@
+# Copyright 2017 Intel Corporation
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ------------------------------------------------------------------------------
+
+version: "2.1"
+
+services:
+
+  validator-0:
+    image: hyperledger/sawtooth-validator:latest
+    container_name: sawtooth-validator-base
+    volumes:
+      - /home/dev/work/code/sawtooth-core/:/project/sawtooth-core
+    ports:
+      - 4004:4004
+    expose:
+      - 4004
+      - 8800
+    command: "bash -c \"\
+        sawadm keygen --force && \
+        sawset genesis \
+          -k /etc/sawtooth/keys/validator.priv \
+          -o config-genesis.batch && \
+        sawadm genesis \
+          config-genesis.batch && \
+        sawtooth-validator -vv \
+          --bind network:tcp://eth0:8800 \
+          --bind component:tcp://eth0:4004 \
+          --peering static \
+          --endpoint tcp://validator-0:8800 \
+          --scheduler serial \
+          --network trust 
+    \""
+    environment:
+      PYTHONPATH: "/project/sawtooth-core/consensus/poet/common:\
+        /project/sawtooth-core/consensus/poet/simulator:\
+        /project/sawtooth-core/consensus/poet/core"
+    stop_signal: SIGKILL
+
+  settings-tp-0:
+    image: hyperledger/sawtooth-settings-tp:latest
+    container_name: sawtooth-settings-tp-base
+    depends_on:
+      - validator-0
+    volumes:
+      - /home/dev/work/code/sawtooth-core/:/project/sawtooth-core
+    expose:
+      - 4004
+    command: settings-tp -C tcp://validator-0:4004
+    stop_signal: SIGKILL
+
+  rest-api-0:
+    image: hyperledger/sawtooth-rest-api:latest
+    container_name: sawtooth-rest-api-base
+    depends_on:
+      - validator-0
+    ports:
+      - 8008:8008
+    volumes:
+      - /home/dev/work/code/sawtooth-core/:/project/sawtooth-core
+    expose:
+      - 8008
+      - 4004
+    command: |
+      bash -c "
+        sawtooth-rest-api \
+          --connect tcp://validator-0:4004 \
+          --bind rest-api-0:8008
+      "
+    stop_signal: SIGKILL
+
+  intkey-tp-0:
+    image: hyperledger/sawtooth-intkey-tp-python:latest
+    container_name: sawtooth-intkey-tp-base
+    depends_on:
+      - rest-api-0
+    volumes:
+      - /home/dev/work/code/sawtooth-core/:/project/sawtooth-core
+    expose:
+      - 4004
+    command: intkey-tp-python -C tcp://validator-0:4004
+    stop_signal: SIGKILL
+
+  xo-tp-0:
+    image: hyperledger/sawtooth-xo-tp-python:latest
+    container_name: sawtooth-xo-tp-base
+    depends_on:
+      - rest-api-0
+    volumes:
+      - /home/dev/work/code/sawtooth-core/:/project/sawtooth-core
+    expose:
+      - 4004
+    command: xo-tp-python -C tcp://validator-0:4004
+    stop_signal: SIGKILL
+
+  shell:
+    image: hyperledger/sawtooth-all:1.0
+    container_name: sawtooth-shell-base
+    depends_on:
+      - validator-0
+    volumes:
+      - /home/dev/work/code/:/home/dev/work/code/
+      - ../../sawtooth-java-wrapper-service/target/:/project/target
+      - ../../sawtooth-java-wrapper-service/script/:/project/script
+    entrypoint: "bash -c \"\
+        sawtooth keygen && \
+        tail -f /dev/null \
+        \""
+
+  asset-tp-0:
+    container_name: sawtooth-asset-tp
+    depends_on:
+      - shell
+    build: ../../sawtooth-java-wrapper-service
+    expose:
+      - 1044
+    environment:
+      - DEBUG_PORT:1044
+      - JAR_NAME:sawtooth-java-wrapper-service-0.0.1-SNAPSHOT.jar
+      - TP_PROCESSOR:com.mycompany.blockchain.sawtooth.core.service.asset.AssetProcessor
+      - VALIDATOR_NETWORK_URL:tcp://localhost:4004
+
+
