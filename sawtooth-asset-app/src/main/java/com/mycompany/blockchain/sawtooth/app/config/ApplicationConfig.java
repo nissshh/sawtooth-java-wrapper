@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.google.gson.Gson;
 import com.mycompany.blockchain.sawtooth.client.GenericBatchBuilder;
 import com.mycompany.blockchain.sawtooth.client.Signer;
 import com.mycompany.blockchain.sawtooth.client.asset.AssetPayloadClientService;
@@ -100,6 +101,11 @@ public class ApplicationConfig {
 	@Bean
 	public Signer getSigner() {
 		return new Signer(signerKey);
+	}
+	
+	@Bean
+	public Gson getGson() {
+		return new Gson();
 	}
 
 }
