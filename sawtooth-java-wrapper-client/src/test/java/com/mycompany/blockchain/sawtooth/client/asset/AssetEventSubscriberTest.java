@@ -10,8 +10,8 @@ import org.junit.Test;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.mycompany.blockchain.sawtooth.client.ClientZMQTemplate;
+import com.mycompany.blockchain.sawtooth.client.IEventProcessor;
 import com.mycompany.blockchain.sawtooth.core.service.IAddressBuilder;
-import com.mycompany.blockchain.sawtooth.core.service.IEventProcessor;
 import com.mycompany.blockchain.sawtooth.core.service.asset.AssetAddressBuilder;
 import com.mycompany.blockchain.sawtooth.mortgage.asset.protobuf.Asset;
 
@@ -32,7 +32,7 @@ public class AssetEventSubscriberTest {
 		String txFamilyName = "asset";
 		String txFamilyVer = "1.0";
 		IAddressBuilder<Asset> addressBuilder = new AssetAddressBuilder(txFamilyName, txFamilyVer);
-		assetEventSubscriber = new AssetEventSubscriber(template, eventProcessor, addressBuilder);
+		assetEventSubscriber = new AssetEventSubscriber(eventProcessor,addressBuilder,template);
 		assetEventSubscriber.init();
 	}
 
