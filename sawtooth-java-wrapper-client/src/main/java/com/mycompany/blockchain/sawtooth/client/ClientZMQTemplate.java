@@ -3,15 +3,11 @@
  */
 package com.mycompany.blockchain.sawtooth.client;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mycompany.blockchain.sawtooth.client.asset.AssetEventProcessor;
-import com.mycompany.blockchain.sawtooth.core.service.IEventProcessor;
 
 import lombok.Getter;
 import lombok.extern.java.Log;
