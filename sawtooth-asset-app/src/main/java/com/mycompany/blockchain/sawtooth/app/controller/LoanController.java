@@ -3,6 +3,7 @@ package com.mycompany.blockchain.sawtooth.app.controller;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -159,7 +160,9 @@ public class LoanController {
 
 	@RequestMapping(consumes = "application/json", method = RequestMethod.POST, path = "/loan/payment")
 	public @ResponseBody int loanPayment(@RequestBody LoanPaymentVO loanVo) throws Exception {
-		Payment payment = Payment.newBuilder().setFrom(loanVo.getPayment().getFrom())
+		Random random = new Random();
+		String id = String.valueOf(random.nextInt(999999));
+		Payment payment = Payment.newBuilder().setId(id).setFrom(loanVo.getPayment().getFrom())
 				.setTo(loanVo.getPayment().getTo()).setAmount(loanVo.getPayment().getAmount())
 				.build();
 		

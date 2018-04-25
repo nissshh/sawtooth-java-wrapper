@@ -61,9 +61,8 @@ public class LoanService {
 	 */
 
 	public Status pay(LoanRePaymentPayload loanPaymentPayload) throws Exception {
-		Random random = new Random();
-		String id = String.valueOf(random.nextInt(999999));
-		Payment payment = Payment.newBuilder().setId(id)
+		
+		Payment payment = Payment.newBuilder().setId(loanPaymentPayload.getPayment().getId())
 				.setAmount(loanPaymentPayload.getPayment().getAmount())
 				.setFrom(loanPaymentPayload.getPayment().getFrom())
 				.setTo(loanPaymentPayload.getPayment().getTo()).build();
