@@ -1,6 +1,8 @@
 package com.mycompany.blockchain.sawtooth.app.controller;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.googlecode.protobuf.format.JsonFormat;
@@ -31,6 +34,7 @@ import com.mycompany.blockchain.sawtooth.loan.protobuf.Payment;
 import lombok.extern.slf4j.Slf4j;
 import sawtooth.sdk.processor.exceptions.ValidatorConnectionError;
 import sawtooth.sdk.protobuf.ClientBatchSubmitResponse.Status;
+import sawtooth.sdk.protobuf.ClientStateListResponse.Entry;
 
 /**
  * 
@@ -51,6 +55,9 @@ public class LoanController {
 
 	@Autowired
 	LoanService loanService;
+	
+	@Autowired
+	private Gson gson;
 
 	@RequestMapping(method = RequestMethod.GET, path = "/loan")
 	public @ResponseBody String getLoan(@RequestParam String assetId, String lenderId, String borrowerId)
@@ -65,6 +72,27 @@ public class LoanController {
 		return strin;
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, path = "/all_loan")
+	public @ResponseBody String getAllLoans() throws InvalidProtocolBufferException,
+			InterruptedException, ValidatorConnectionError, UnsupportedEncodingException {
+		Loan entity = Loan.newBuilder().setAssetId("").setBorrowerId("").setLenderId("").build();
+		String address = loanPayloadService.getiAddressBuilder().buildAddress(entity);
+
+		List<Entry> loanEntryList = loanPayloadService.getTemplate()
+				.getClientListStateRequest(address.substring(0, 6));
+		List<Loan> allLoans = new ArrayList<>();
+		loanEntryList.stream().forEach(entry -> {
+			try {
+				allLoans.add(Loan.parseFrom(entry.getData()));
+			} catch (InvalidProtocolBufferException e) {
+				System.out.println(e);
+			}
+		});
+		String result = gson.toJson(allLoans);
+		log.info("JSON : ", result);
+		return result;
+	}
+	
 	@RequestMapping(method = RequestMethod.GET, path = "/payment")
 	public @ResponseBody String getPayment(@RequestParam String paymentId)
 			throws InvalidProtocolBufferException, InterruptedException, ValidatorConnectionError,
@@ -77,6 +105,27 @@ public class LoanController {
 		return strin;
 	}
 
+	@RequestMapping(method = RequestMethod.GET, path = "/all_payment")
+	public @ResponseBody String getAllPayments() throws InvalidProtocolBufferException,
+			InterruptedException, ValidatorConnectionError, UnsupportedEncodingException {
+		Payment payment = Payment.newBuilder().setId("").build();
+		String address = paymentService.getiAddressBuilder().buildAddress(payment);
+
+		List<Entry> paymentEntryList = paymentService.getTemplate()
+				.getClientListStateRequest(address.substring(0, 6));
+		List<Payment> allPayments = new ArrayList<>();
+		paymentEntryList.stream().forEach(entry -> {
+			try {
+				allPayments.add(Payment.parseFrom(entry.getData()));
+			} catch (InvalidProtocolBufferException e) {
+				System.out.println(e);
+			}
+		});
+		String result = gson.toJson(allPayments);
+		log.info("JSON : ", result);
+		return result;
+	}
+	
 	@RequestMapping(consumes = "application/json", method = RequestMethod.POST, path = "/loan/create")
 	public @ResponseBody int createLoanRequest(@RequestBody CreateLoanVO loanVo) throws Exception {
 		CreateLoanRequest creteWallet = CreateLoanRequest.newBuilder()

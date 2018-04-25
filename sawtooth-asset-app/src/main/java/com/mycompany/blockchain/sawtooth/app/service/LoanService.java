@@ -140,7 +140,7 @@ public class LoanService {
 				com.mycompany.blockchain.sawtooth.wallet.protobuf.SawtoothWalletPayload.PayloadType.WITHDRAW)
 				.setWithdraw(withdrawWallet).build();
 		TransactionHeaderDTO walletDebitPayloadDTO = getWalletTransaction(payloadDebit);
-		log.info("Sending Wallet Debit Payload as " + walletDebitPayloadDTO);
+		log.info("Sending Wallet Debit Payload as " + payloadDebit);
 
 		Deposit depositWallet = Deposit.newBuilder().setCustomerId(payment.getTo())
 				.setAmount(payment.getAmount()).build();
