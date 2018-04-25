@@ -6,7 +6,6 @@ package com.mycompany.blockchain.sawtooth.core.service.loan;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import com.google.protobuf.ByteString;
 import com.mycompany.blockchain.sawtooth.core.service.IAddressBuilder;
@@ -22,6 +21,7 @@ import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanRequestPayload.LoanRe
 import com.mycompany.blockchain.sawtooth.loan.protobuf.LoanStatus;
 import com.mycompany.blockchain.sawtooth.loan.protobuf.Payment;
 
+import lombok.extern.java.Log;
 import sawtooth.sdk.processor.State;
 import sawtooth.sdk.processor.exceptions.InternalError;
 import sawtooth.sdk.processor.exceptions.InvalidTransactionException;
@@ -32,9 +32,8 @@ import sawtooth.sdk.protobuf.TpProcessRequest;
  * @author Sandip Nirmal
  *
  */
+@Log
 public class LoanHandler implements ITransactionHandler<String, LoanRequestPayload> {
-
-	Logger log = Logger.getLogger(LoanHandler.class.getName());
 
 	public static final String TX_FAMILY_NAME = "loan";
 
