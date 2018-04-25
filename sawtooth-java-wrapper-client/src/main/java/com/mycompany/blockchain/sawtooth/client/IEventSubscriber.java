@@ -69,13 +69,16 @@ public interface IEventSubscriber<ENTITY> {
 	 */
 	 public default int subscribe()
 			throws InvalidProtocolBufferException, InterruptedException, ValidatorConnectionError, TimeoutException {
-		EventFilter intkeyfilter = EventFilter.newBuilder().setKey("address")
-				.setMatchString(this.getAddressBuilder().getAddressPrefix()).setFilterType(FilterType.REGEX_ANY)
+		EventFilter intkeyfilter = EventFilter.newBuilder()
+				.setKey("address")
+				.setMatchString(this.getAddressBuilder().getAddressPrefix())
+				.setFilterType(FilterType.SIMPLE_ANY)
 				.build();
-
+		log.info("Subscribing to the events of addresss = "+intkeyfilter);
 		// added filter on state delta and on specific address
-		EventSubscription eventSubscription = EventSubscription.newBuilder().setEventType("sawtooth/state-delta")
-				.addFilters(intkeyfilter).build();
+		EventSubscription eventSubscription = EventSubscription.newBuilder().clearFilters().setEventType("sawtooth/state-delta")
+				//.addFilters(intkeyfilter) //This filter is required to work currently the issue is that the sawtooth doesnt outs events for loan , hence comenting.
+				.build();	
 
 		ClientEventsSubscribeRequest clientEventsSubscribe = ClientEventsSubscribeRequest.newBuilder()
 				.addSubscriptions(eventSubscription).build();

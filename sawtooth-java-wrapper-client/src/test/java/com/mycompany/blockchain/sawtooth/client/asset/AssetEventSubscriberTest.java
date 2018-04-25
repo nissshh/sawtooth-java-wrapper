@@ -28,10 +28,10 @@ public class AssetEventSubscriberTest {
 	@Before
 	public void init() throws Exception {
 		ClientZMQTemplate template = new ClientZMQTemplate("tcp://localhost:4004");
-		IEventProcessor<Asset> eventProcessor = new AssetEventProcessor();
 		String txFamilyName = "asset";
 		String txFamilyVer = "1.0";
 		IAddressBuilder<Asset> addressBuilder = new AssetAddressBuilder(txFamilyName, txFamilyVer);
+		IEventProcessor<Asset> eventProcessor = new AssetEventProcessor(addressBuilder);
 		assetEventSubscriber = new AssetEventSubscriber(eventProcessor,addressBuilder,template);
 		assetEventSubscriber.init();
 	}

@@ -55,6 +55,7 @@ public class ClientZMQTemplate {
 			throw new Exception("No address specified for ZMQ!! ");
 		}
 		stream = new Stream(zmqAddress);
+		log.info("Initialized...");
 	}
 
 	/**

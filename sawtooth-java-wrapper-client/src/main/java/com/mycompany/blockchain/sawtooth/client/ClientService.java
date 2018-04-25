@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import com.google.protobuf.ByteString;
 import com.mycompany.blockchain.sawtooth.core.service.IAddressBuilder;
 
+import lombok.extern.java.Log;
 import sawtooth.sdk.protobuf.BatchList;
 import sawtooth.sdk.protobuf.ClientBatchSubmitResponse.Status;
 
@@ -22,6 +23,7 @@ import sawtooth.sdk.protobuf.ClientBatchSubmitResponse.Status;
  *            Payload that will be sent to Transaction Family.Further forms the encoded payuloa. A
  *            payload generally contains Entity and Action to be permformed on the entitye.
  */
+@Log
 public abstract class ClientService<ENTITY, PAYLOAD> {
 
 	private static Logger logger = Logger.getLogger(ClientService.class.getName());
@@ -59,6 +61,7 @@ public abstract class ClientService<ENTITY, PAYLOAD> {
 		batchBuilder.setSigner(signer);
 		template = new ClientZMQTemplate(address);
 		template.init();
+		log.info("Initialized...");
 	}
 
 	public Status submitStateChange(PAYLOAD payload) throws Exception {

@@ -5,15 +5,13 @@ package com.mycompany.blockchain.sawtooth.core.service.asset;
 
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import com.google.protobuf.ByteString;
 import com.mycompany.blockchain.sawtooth.core.service.IAddressBuilder;
 import com.mycompany.blockchain.sawtooth.core.service.IBaseDAO;
+import com.mycompany.blockchain.sawtooth.core.service.IDataValidator;
 import com.mycompany.blockchain.sawtooth.core.service.IEntityConvertor;
 import com.mycompany.blockchain.sawtooth.core.service.ITransactionHandler;
-import com.mycompany.blockchain.sawtooth.core.service.IDataValidator;
-//import com.mycompany.blockchain.sawtooth.intkey.protobuf.IntKeyValuePayload.PayloadType;
 import com.mycompany.blockchain.sawtooth.mortgage.asset.protobuf.Asset;
 import com.mycompany.blockchain.sawtooth.mortgage.asset.protobuf.AssetPayload;
 import com.mycompany.blockchain.sawtooth.mortgage.asset.protobuf.AssetPayload.PayloadType;
@@ -21,7 +19,7 @@ import com.mycompany.blockchain.sawtooth.mortgage.asset.protobuf.CreateAsset;
 import com.mycompany.blockchain.sawtooth.mortgage.asset.protobuf.DeleteAsset;
 import com.mycompany.blockchain.sawtooth.mortgage.asset.protobuf.UpdateAsset;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 import sawtooth.sdk.processor.State;
 import sawtooth.sdk.processor.exceptions.InternalError;
 import sawtooth.sdk.processor.exceptions.InvalidTransactionException;
@@ -33,9 +31,8 @@ import sawtooth.sdk.protobuf.TpProcessRequest;
  * @author Nishant Sonar<nishant_sonar@yahoo.com>
  *
  */
+@Log
 public class AssetPayloadHandler implements ITransactionHandler<String, AssetPayload> {
-	
-	Logger log = Logger.getLogger(AssetPayloadHandler.class.getName());
 	
 	public static final String TX_FAMILY_NAME="asset";
 	
