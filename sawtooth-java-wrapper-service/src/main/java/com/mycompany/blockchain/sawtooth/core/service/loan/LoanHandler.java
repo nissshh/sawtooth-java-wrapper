@@ -252,15 +252,19 @@ public class LoanHandler implements ITransactionHandler<String, LoanRequestPaylo
 	private Loan updateMontlyPayment(TpProcessRequest transactionRequest,
 			Payment payment, Loan existingLoan) {
 		List<Payment> paymentsList = new ArrayList<Payment>();
-		existingLoan.getPaymentsList().forEach(p -> paymentsList.add(p));
+		paymentsList.addAll(existingLoan.getPaymentsList());
 		paymentsList.add(payment);
 		
 		//int interest = (int)(((existingLoan.getBalance() * existingLoan.getRoi())/100) / 12);
 		int balance = existingLoan.getBalance() - (payment.getAmount());
-		return Loan.newBuilder().setAssetId(existingLoan.getAssetId()).setBorrowerId(existingLoan.getBorrowerId())
+		LoanStatus status = existingLoan.getStatus();
+		if (balance <= 0) {
+			status = LoanStatus.CLOSED;
+		}
+		 return Loan.newBuilder().setAssetId(existingLoan.getAssetId()).setBorrowerId(existingLoan.getBorrowerId())
 				.setLenderId(existingLoan.getLenderId()).setRequestedAmt(existingLoan.getRequestedAmt())
 				.setApprovedAmt(existingLoan.getApprovedAmt()).setId(existingLoan.getId()).setBalance(balance < 0 ? 0 : balance)
-				.setRoi(existingLoan.getRoi()).setStatus(existingLoan.getStatus()).addAllPayments(paymentsList)
+				.setRoi(existingLoan.getRoi()).setStatus(status).addAllPayments(paymentsList)
 				.build();
 	}
 

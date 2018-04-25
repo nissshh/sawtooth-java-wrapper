@@ -17,6 +17,8 @@ message Asset {
 	string public_key = 5;
 	// a free formed field to hold asset details.  todo - can be connected to the various asset like real,securities, abs etc.
 	string details = 6;
+	//owner of the asser
+	string owner =7;
 }
 
 message AssetContainer {
@@ -45,8 +47,9 @@ message CreateAsset {
     string type= 2;
     int32 value = 3;
     string pub_key = 4;
-    string details= 5;
-    Asset asset = 6;
+    string owner =5;
+    string details= 6;
+    Asset asset = 7;
 }
 
 message UpdateAsset {
@@ -54,7 +57,8 @@ message UpdateAsset {
     string type= 2;
     int32 value = 3;
     string pub_key = 4;
-    string details= 5;
+    string owner =5;
+    string details= 6;
 }
 
 message DeleteAsset{

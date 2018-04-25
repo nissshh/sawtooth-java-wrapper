@@ -128,7 +128,6 @@ public class AssetPayloadHandler implements ITransactionHandler<String, AssetPay
 	 */
 	protected void handle(TpProcessRequest transactionRequest, State state, CreateAsset createAsset)
 			throws InvalidTransactionException, InternalError, IOException {
-		//log.debug("Inside {}",Thread.currentThread().getStackTrace()[0].getMethodName());
 		log.info("Inside com.mycompany.blockchain.sawtooth.core.service.asset.AssetHandler.handle(TpProcessRequest, State, CreateAsset)");
 		Asset asset = getAsset(transactionRequest, createAsset); //build data.
 		String address = assetAddressBuilder.buildAddress(asset); //build address.
@@ -149,13 +148,14 @@ public class AssetPayloadHandler implements ITransactionHandler<String, AssetPay
 	 * @return
 	 */
 	private  Asset getAsset(TpProcessRequest transactionRequest, CreateAsset createAsset) {
-		String name = createAsset.getName();
-		String details = createAsset.getDetails();
-		String type = createAsset.getType();
-		int value = createAsset.getValue();
 		String pubKey = transactionRequest.getSignature(); //public key of the creator, creator is owner.
-		Asset asset = Asset.newBuilder().setName(name).setDetails(details).setPublicKey(pubKey).setValue(value).setType(type).build();
-		return asset;
+		return Asset.newBuilder()
+				.setName(createAsset.getName())
+				.setDetails(createAsset.getDetails())
+				.setPublicKey(pubKey)
+				.setValue(createAsset.getValue())
+				.setType(createAsset.getType())
+				.setOwner(createAsset.getOwner()).build();
 	}
 
 	/**
@@ -165,13 +165,14 @@ public class AssetPayloadHandler implements ITransactionHandler<String, AssetPay
 	 * @return
 	 */
 	private Asset getAsset(TpProcessRequest transactionRequest, UpdateAsset udpateAsset) {
-		String name = udpateAsset.getName();
-		String details = udpateAsset.getDetails();
-		String type = udpateAsset.getType();
-		int value = udpateAsset.getValue();
 		String pubKey = transactionRequest.getSignature(); //public key of the creator, creator is owner.
-		Asset asset = Asset.newBuilder().setName(name).setDetails(details).setPublicKey(pubKey).setValue(value).setType(type).build();
-		return asset;
+		return Asset.newBuilder()
+				.setName(udpateAsset.getName())
+				.setDetails(udpateAsset.getDetails())
+				.setPublicKey(pubKey)
+				.setValue(udpateAsset.getValue())
+				.setType(udpateAsset.getType())
+				.setOwner(udpateAsset.getOwner()).build();
 	}
 
 	private void handle(TpProcessRequest transactionRequest, State state, DeleteAsset deleteAsset) throws InvalidTransactionException {

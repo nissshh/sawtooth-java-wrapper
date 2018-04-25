@@ -20,8 +20,8 @@ public class AssetDataValidator implements IDataValidator<Asset> {
 	@Override
 	public boolean validate(Asset data) throws InvalidTransactionException {
 		if (data.getName() == null || data.getName().isEmpty()) throw new InvalidTransactionException("Asset[Name] cannot be empty or null.");
-		if (data.getValue() <= 0 ) throw new InvalidTransactionException("Asset[Value] cannot be zero (0) or negative.");
-		if (data.getPublicKey() == null || data.getPublicKey().isEmpty()) throw new InvalidTransactionException("Asset[Public Key] cannot be empty or null.");
+		//if (data.getValue() <= 0 ) throw new InvalidTransactionException("Asset[Value] cannot be zero (0) or negative.");
+		//if (data.getPublicKey() == null || data.getPublicKey().isEmpty()) throw new InvalidTransactionException("Asset[Public Key] cannot be empty or null.");
 		return true;
 	}
 

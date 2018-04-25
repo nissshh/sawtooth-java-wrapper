@@ -82,7 +82,7 @@ public class AssetController {
 	
 	@RequestMapping(consumes="application/json",method=RequestMethod.POST,path="/asset")
 	public @ResponseBody int putAsset(@RequestBody AssetVO asset) throws Exception {
-		CreateAsset creteAsset = CreateAsset.newBuilder().setName(asset.getName()).setValue(asset.getValue()).setDetails(asset.getDetails()).setPubKey(asset.getOwner()).build(); 
+		CreateAsset creteAsset = CreateAsset.newBuilder().setName(asset.getName()).setValue(asset.getValue()).setDetails(asset.getDetails()).setOwner(asset.getOwner()).build(); 
 		AssetPayload payload = AssetPayload.newBuilder().setPayloadType(PayloadType.CREATE_ASSET).setCreateAsset(creteAsset).build();
 		Status response = assetPayloadService.submitStateChange(payload);
 		if(!response.equals(Status.OK) && !response.equals(Status.STATUS_UNSET)) {
