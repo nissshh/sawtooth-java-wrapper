@@ -43,7 +43,8 @@ Client code is the code that will be running on the client applicaiton side. Rem
 The framework abstracts/ eases the submisssion of the transactions to the sawtooth which otherwise is very strict process. Currently , if you do any mistake while sending transaction , it rejectd by the sawtooth netowork and very difficult to find the reason.
 In order to write a client , the desgn is though make it easier in a way for implementer that they only need to create the Payload and Submit the payload and then check response.Thats it!To accomplish all thsebelow ar ethe framework compoenets provided
 
-1. Generic Transaciton Builder
+1. Generic Transaciton Builder 
+Building a transaction sometimes is tedious as , if you miss a step the errors that you get back from gthe sawtooth network are not descriptive and often leavs you guesing. Hence, I have create a transaction builder that hides the nitty gritty details and lets you specify the payload data only thats it. The rest of ht job to create a trancsaction is abstracted to tghe implementor. The Generic Transcation builder can be used in other service classsed to build a transaction and further , can then be used to create batches  using generic batch builder.
 2. ZMQ Template
 3. Generic Batch Builder
 4. Simple Service Absctractio, that implemeters can extend and implement.
